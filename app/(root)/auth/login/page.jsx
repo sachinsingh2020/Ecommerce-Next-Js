@@ -19,7 +19,7 @@ import { useState } from "react";
 import {FaRegEyeSlash} from "react-icons/fa";
 import {FaRegEye} from "react-icons/fa6";
 import Link from "next/link";
-// import { WEBSITE_REGISTER } from "@/routes/WebsiteRoute";
+import { WEBSITE_REGISTER } from "@/routes/WebsiteRoute";
 import ButtonLoading from "@/components/Application/ButtonLoading";
 import { Card, CardContent } from '@/components/ui/card';
 
@@ -137,8 +137,7 @@ export default function LoginPage() {
             >
   <p>Don't have an account? </p>
             <Link
-            // href={WEBSITE_REGISTER}
-            href={""}
+            href={WEBSITE_REGISTER}
             className="text-primary underline"
             >
             Create an Account!
