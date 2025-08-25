@@ -16,7 +16,6 @@ export async function POST(request) {
     });
 
     const payload = await request.json();
-
     const validatedData = validationSchema.safeParse(payload);
 
     if (!validatedData.success) {
@@ -29,19 +28,15 @@ export async function POST(request) {
     }
 
     const { name, email, password } = validatedData.data;
-
     const checkUser = await UserModel.exists({ email });
 
     if (checkUser) {
-      return response(true, 409, "User already registered");
+      return response(false, 409, "User already registered");
     }
-    const NewRegistration = new UserModel({
-      name,
-      email,
-      password,
-    });
 
+    const NewRegistration = new UserModel({ name, email, password });
     await NewRegistration.save();
+
     const secret = new TextEncoder().encode(process.env.SECRET_KEY);
     const token = await new SignJWT({ userId: NewRegistration._id })
       .setIssuedAt()
@@ -53,7 +48,7 @@ export async function POST(request) {
       "Email Verification request from Sachin Singh",
       email,
       emailVerificationLink(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/verify-email/${token}`
+        `${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify-email/${token}`
       )
     );
 
@@ -63,6 +58,6 @@ export async function POST(request) {
       "Registration successful. Please verify your email."
     );
   } catch (error) {
-    catchError(error);
+    return catchError(error);
   }
 }

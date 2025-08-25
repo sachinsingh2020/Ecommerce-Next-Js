@@ -59,6 +59,7 @@ export default function RegisterPage() {
         "/api/auth/register",
         values
       );
+
       if (!registerResponse.success) {
         throw new Error(registerResponse.message || "Something went wrong");
       }
