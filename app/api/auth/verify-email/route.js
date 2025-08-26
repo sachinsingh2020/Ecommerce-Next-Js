@@ -15,6 +15,7 @@ export async function POST(request) {
     const decoded = await jwtVerify(token, secret);
 
     const userId = decoded.payload.userId;
+    console.log({userId});
 
     // get user
     const user = await UserModel.findById(userId);
