@@ -29,7 +29,8 @@ export default function EmailVerification({ params }) {
       <CardContent>
         {isVerified ? (
           <div>
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center
+            ">
               <Image src={verifiedImage.src} height={100} />
             </div>
           </div>
