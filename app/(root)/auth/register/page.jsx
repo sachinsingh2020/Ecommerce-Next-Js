@@ -23,6 +23,7 @@ import { WEBSITE_LOGIN } from "@/routes/WebsiteRoute";
 import ButtonLoading from "@/components/Application/ButtonLoading";
 import { Card, CardContent } from "@/components/ui/card";
 import axios from "axios";
+import { showToast } from "@/lib/showToast";
 
 export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
@@ -65,9 +66,9 @@ export default function RegisterPage() {
       }
       form.reset();
 
-      alert(registerResponse.message || "Registered successfully");
+      showToast("success", registerResponse.message);
     } catch (error) {
-      alert(error.message);
+      showToast("error", error.message);
     } finally {
       setLoading(false);
     }

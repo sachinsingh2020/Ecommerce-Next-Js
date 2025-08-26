@@ -1,5 +1,6 @@
 import { connectDB } from "@/lib/databaseConnection";
 import { catchError, response } from "@/lib/helperFunction";
+import UserModel from "@/models/User.model";
 import { jwtVerify } from "jose";
 
 export async function POST(request) {
@@ -15,7 +16,7 @@ export async function POST(request) {
     const decoded = await jwtVerify(token, secret);
 
     const userId = decoded.payload.userId;
-    console.log({userId});
+    console.log({ userId });
 
     // get user
     const user = await UserModel.findById(userId);
