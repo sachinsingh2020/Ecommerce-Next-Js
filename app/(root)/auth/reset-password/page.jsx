@@ -1,5 +1,4 @@
 "use client";
-// sachin singh
 import Logo from "@/public/assets/images/logo-black.png";
 import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,65 +13,34 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import z from "zod";
 import { useState } from "react";
-import { FaRegEyeSlash } from "react-icons/fa";
-import { FaRegEye } from "react-icons/fa6";
 import Link from "next/link";
-import { WEBSITE_REGISTER, WEBSITE_RESETPASSWORD } from "@/routes/WebsiteRoute";
+import { WEBSITE_LOGIN } from "@/routes/WebsiteRoute";
 import ButtonLoading from "@/components/Application/ButtonLoading";
 import { Card, CardContent } from "@/components/ui/card";
 import { showToast } from "@/lib/showToast";
 import axios from "axios";
 import OTPVerification from "@/components/Application/OTPVerification";
-import { useDispatch } from "react-redux";
 import { login } from "@/store/reducer/authReducer";
 
-export default function LoginPage() {
-  const dispatch = useDispatch();
-
-  const [loading, setLoading] = useState(false);
+export default function ResetPassword() {
+  const [emailVerificationLoading, setEmailVerificationLoading] =
+    useState(false);
   const [otpVerificationLoading, setOtpVerificationLoading] = useState(false);
-  const [isTypePassword, setIsTypePassword] = useState(true);
   const [otpEmail, setOtpEmail] = useState();
 
-  const formSchema = zSchema
-    .pick({
-      email: true,
-    })
-    .extend({
-      password: z.string().min("3", "Password field is required."),
-    });
+  const formSchema = zSchema.pick({
+    email: true,
+  });
 
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
-      password: "",
     },
   });
 
-  const handleLoginSubmit = async (values) => {
-    try {
-      setLoading(true);
-      const { data: loginResponse } = await axios.post(
-        "/api/auth/login",
-        values
-      );
-
-      if (!loginResponse.success) {
-        throw new Error(loginResponse.message || "Something went wrong");
-      }
-
-      setOtpEmail(values.email);
-      form.reset();
-      showToast("success", loginResponse.message);
-    } catch (error) {
-      showToast("error", error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const handleEmailVerification = async (values) => {};
 
   const handleOtpVerification = async (values) => {
     try {
@@ -112,12 +80,12 @@ export default function LoginPage() {
         {!otpEmail ? (
           <>
             <div className="text-center">
-              <h1 className="text-3xl font-bold">Login Into Account</h1>
-              <p>Login into your account by filling out the form below.</p>
+              <h1 className="text-3xl font-bold">Reset Password</h1>
+              <p>Enter your email for password reset.</p>
             </div>
             <div className="mt-5">
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleLoginSubmit)}>
+                <form onSubmit={form.handleSubmit(handleEmailVerification)}>
                   <div className="mb-5">
                     <FormField
                       control={form.control}
@@ -137,53 +105,21 @@ export default function LoginPage() {
                       )}
                     />
                   </div>
-                  <div className="mb-5">
-                    <FormField
-                      control={form.control}
-                      name="password"
-                      render={({ field }) => (
-                        <FormItem className={"relative"}>
-                          <FormLabel>Password</FormLabel>
-                          <FormControl>
-                            <Input
-                              type={isTypePassword ? "password" : "text"}
-                              placeholder="***********"
-                              {...field}
-                            />
-                          </FormControl>
-                          <button
-                            type="button"
-                            className="absolute right-2 top-1/2 cursor-pointer"
-                            onClick={() => setIsTypePassword(!isTypePassword)}>
-                            {isTypePassword ? <FaRegEyeSlash /> : <FaRegEye />}
-                          </button>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+
                   <div className="mb-3">
                     <ButtonLoading
                       type="submit"
-                      text="Login"
+                      text="Send OTP"
                       className={"w-full cursor-pointer"}
-                      loading={loading}
+                      loading={emailVerificationLoading}
                     />
                   </div>
                   <div className="text-center">
                     <div className="flex justify-center items-center gap-1">
-                      <p>Don't have an account? </p>
                       <Link
-                        href={WEBSITE_REGISTER}
+                        href={WEBSITE_LOGIN}
                         className="text-primary underline">
-                        Create an Account!
-                      </Link>
-                    </div>
-                    <div className="mt-3">
-                      <Link
-                        href={WEBSITE_RESETPASSWORD}
-                        className="text-primary underline">
-                        Forgot Password?
+                        Back To Login
                       </Link>
                     </div>
                   </div>
