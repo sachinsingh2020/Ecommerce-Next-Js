@@ -1,3 +1,4 @@
+import { emailVerificationLink } from "@/email/emailVerificationLink";
 import { otpEmail } from "@/email/otpEmail";
 import { connectDB } from "@/lib/databaseConnection";
 import { catchError, generateOTP, response } from "@/lib/helperFunction";

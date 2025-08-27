@@ -25,8 +25,13 @@ import { Card, CardContent } from "@/components/ui/card";
 import { showToast } from "@/lib/showToast";
 import axios from "axios";
 import OTPVerification from "@/components/Application/OTPVerification";
+import { useDispatch } from "react-redux";
+import { login } from "@/store/reducer/authReducer";
 
 export default function LoginPage() {
+
+  const dispatch = useDispatch();
+
   const [loading, setLoading] = useState(false);
   const [otpVerificationLoading, setOtpVerificationLoading] = useState(false);
   const [isTypePassword, setIsTypePassword] = useState(true);
@@ -84,6 +89,8 @@ export default function LoginPage() {
 
       setOtpEmail("");
       showToast("success", otpResponse.message);
+
+      dispatch(login(otpResponse.data));
     } catch (error) {
       showToast("error", error.message);
     } finally {
