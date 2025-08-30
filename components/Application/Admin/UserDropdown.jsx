@@ -14,6 +14,7 @@ import { useSelector } from "react-redux";
 import { IoShirtOutline } from "react-icons/io5";
 import { MdOutlineShoppingBag } from "react-icons/md";
 import Link from "next/link";
+import LogoutButton from "./LogoutButton";
 
 const UserDropdown = () => {
   const auth = useSelector((store) => store.authStore.auth);
@@ -42,6 +43,7 @@ const UserDropdown = () => {
             Orders
           </Link>
         </DropdownMenuItem>
+        <LogoutButton />
       </DropdownMenuContent>
     </DropdownMenu>
   );
