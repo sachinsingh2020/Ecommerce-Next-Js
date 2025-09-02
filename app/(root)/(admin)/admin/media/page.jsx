@@ -1,4 +1,5 @@
 import BreadCrumb from "@/components/Application/Admin/BreadCrumb";
+import UploadMedia from "@/components/Application/Admin/UploadMedia";
 import { ADMIN_DASHBOARD } from "@/routes/AdminPanelRoute";
 
 const breadcrumbData = [
@@ -10,6 +11,7 @@ export default function MediaPage() {
   return (
     <div>
       <BreadCrumb breadcrumbData={breadcrumbData} />
+      <UploadMedia />
     </div>
   );
 }
