@@ -59,7 +59,7 @@ const UploadMedia = ({ isMultiple }) => {
     >
       {({ open }) => {
         return (
-          <Button onClick={() => open()}>
+          <Button className={"cursor-pointer"} onClick={() => open()}>
             <FiPlus />
             Upload Media
           </Button>
