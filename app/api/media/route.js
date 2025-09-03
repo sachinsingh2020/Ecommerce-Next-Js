@@ -19,9 +19,9 @@ export async function GET(request) {
 
     let filter = {};
     if (deleteType === "SD") {
-      filter = { deleteAt: null };
+      filter = { deletedAt: null };
     } else if (deleteType === "PD") {
-      filter = { deleteAt: { $ne: null } };
+      filter = { deletedAt: { $ne: null } };
     }
 
     const mediaData = await MediaModel.find(filter)

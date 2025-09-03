@@ -41,9 +41,7 @@ export default function MediaPage() {
     const { data: response } = await axios.get(
       `/api/media?page=${page}&&limit=10&&deleteType=${deleteType}`
     );
-
     console.log({ response });
-
     return response;
   };
 
@@ -67,14 +65,14 @@ export default function MediaPage() {
 
   const deleteMutation = useDeleteMutation("media-data", "/api/media/delete");
 
-  const handleDelete = (selectedMedia, deleteType) => {
+  const handleDelete = (ids, deleteType) => {
     let c = true;
     if (deleteType === "PD") {
       c = confirm("Are you sure you want to delete the data permanently");
     }
 
     if (c) {
-      deleteMutation.mutate({ selectedMedia, deleteType });
+      deleteMutation.mutate({ ids, deleteType });
     }
 
     setSelectAll(false);
