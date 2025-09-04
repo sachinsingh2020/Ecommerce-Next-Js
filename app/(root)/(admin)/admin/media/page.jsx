@@ -8,7 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import useDeleteMutation from "@/hooks/useDeleteMutation";
 import { ADMIN_DASHBOARD, ADMIN_MEDIA_SHOW } from "@/routes/AdminPanelRoute";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -20,6 +20,7 @@ const breadcrumbData = [
 ];
 
 export default function MediaPage() {
+  const queryClient = useQueryClient();
   const [deleteType, setDeleteType] = useState("SD");
   const [selectedMedia, setSelectedMedia] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
@@ -86,7 +87,7 @@ export default function MediaPage() {
   useEffect(() => {
     if (selectAll) {
       const ids = data.pages.flatMap((page) =>
-        page.mediaData.map((media) => media._id)
+        page?.mediaData?.map((media) => media._id)
       );
       setSelectedMedia(ids);
     } else {
@@ -104,7 +105,9 @@ export default function MediaPage() {
               {deleteType === "SD" ? "Media" : "Media Trash"}
             </h4>
             <div className="flex items-center gap-5">
-              {deleteType === "SD" && <UploadMedia />}
+              {deleteType === "SD" && (
+                <UploadMedia isMultiple={true} queryClient={queryClient} />
+              )}
               <div className="flex gap-3">
                 {deleteType === "SD" ? (
                   <Button
@@ -169,8 +172,8 @@ export default function MediaPage() {
             <div className="text-red-500 text-sm">{error.message}</div>
           ) : (
             <>
-              {data.pages.flatMap((page) =>
-                page.mediaData.map((media) => media._id)
+              {data?.pages?.flatMap((page) =>
+                page?.mediaData?.map((media) => media._id)
               ).length === 0 && (
                 <div className="text-center">Data Not Found.</div>
               )}
@@ -192,6 +195,8 @@ export default function MediaPage() {
               </div>
             </>
           )}
+
+          {hasNextPage && <Button>Load More</Button>}
         </CardContent>
       </Card>
     </div>
