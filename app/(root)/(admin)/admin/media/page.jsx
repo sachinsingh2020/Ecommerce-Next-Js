@@ -2,6 +2,7 @@
 import BreadCrumb from "@/components/Application/Admin/BreadCrumb";
 import Media from "@/components/Application/Admin/Media";
 import UploadMedia from "@/components/Application/Admin/UploadMedia";
+import ButtonLoading from "@/components/Application/ButtonLoading";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -46,23 +47,16 @@ export default function MediaPage() {
     return response;
   };
 
-  const {
-    data,
-    error,
-    fetchNextPage,
-    hasNextPage,
-    isFetching,
-    isFetchingNextPage,
-    status,
-  } = useInfiniteQuery({
-    queryKey: ["media-data", deleteType],
-    queryFn: async ({ pageParam }) => await fetchMedia(pageParam, deleteType),
-    initialPageParam: 0,
-    getNextPageParam: (lastPage, pages) => {
-      const nextPage = pages.length;
-      return lastPage.hasMore ? nextPage : undefined;
-    },
-  });
+  const { data, error, fetchNextPage, hasNextPage, isFetching, status } =
+    useInfiniteQuery({
+      queryKey: ["media-data", deleteType],
+      queryFn: async ({ pageParam }) => await fetchMedia(pageParam, deleteType),
+      initialPageParam: 0,
+      getNextPageParam: (lastPage, pages) => {
+        const nextPage = pages.length;
+        return lastPage.hasMore ? nextPage : undefined;
+      },
+    });
 
   const deleteMutation = useDeleteMutation("media-data", "/api/media/delete");
 
@@ -113,8 +107,7 @@ export default function MediaPage() {
                   <Button
                     className={"cursor-pointer"}
                     type="button"
-                    variant="destructive"
-                  >
+                    variant="destructive">
                     <Link href={`${ADMIN_MEDIA_SHOW}?trashof=media`}>
                       Trash
                     </Link>
@@ -128,7 +121,7 @@ export default function MediaPage() {
             </div>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className={"pb-5"}>
           {selectedMedia.length > 0 && (
             <div className="py-2 px-3 bg-violet-200 mb-2 rounded flex  justify-between items-center">
               <Label>
@@ -143,22 +136,19 @@ export default function MediaPage() {
                 {deleteType === "SD" ? (
                   <Button
                     variant={"destructive"}
-                    onClick={() => handleDelete(selectedMedia, deleteType)}
-                  >
+                    onClick={() => handleDelete(selectedMedia, deleteType)}>
                     Move Into Trash
                   </Button>
                 ) : (
                   <>
                     <Button
                       className={"bg-green-500 hover:bg-green-600"}
-                      onClick={() => handleDelete(selectedMedia, "RSD")}
-                    >
+                      onClick={() => handleDelete(selectedMedia, "RSD")}>
                       Restore
                     </Button>
                     <Button
                       variant={"destructive"}
-                      onClick={() => handleDelete(selectedMedia, deleteType)}
-                    >
+                      onClick={() => handleDelete(selectedMedia, deleteType)}>
                       Delete Permanently
                     </Button>
                   </>
@@ -196,7 +186,15 @@ export default function MediaPage() {
             </>
           )}
 
-          {hasNextPage && <Button>Load More</Button>}
+          {hasNextPage && (
+            <ButtonLoading
+              type={"button"}
+              loading={isFetching}
+              onClick={() => fetchNextPage()}
+              text={"Load More"}
+              className={"cursor-pointer"}
+            />
+          )}
         </CardContent>
       </Card>
     </div>
