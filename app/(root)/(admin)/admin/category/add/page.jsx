@@ -17,6 +17,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import slugify from "slugify";
+import axios from "axios";
+import Error from "next/error";
+import { showToast } from "@/lib/showToast";
 
 const breadcrumbData = [
   { href: ADMIN_DASHBOARD, label: "Home" },
@@ -47,7 +50,25 @@ export default function AddCategory() {
     }
   }, [form.watch("name")]);
 
-  const onSubmit = (values) => {};
+  const onSubmit = async (values) => {
+    setLoading(true);
+    try {
+      const { data: response } = await axios.post(
+        "/api/category/create",
+        values
+      );
+      if (!response.success) {
+        throw new Error(response.message);
+      }
+      form.reset();
+
+      showToast("success", response.message);
+    } catch (error) {
+      showToast("error", error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div>
