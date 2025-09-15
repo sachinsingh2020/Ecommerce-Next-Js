@@ -115,6 +115,7 @@ const Datatable = ({
       url.searchParams.set("filters", JSON.stringify(columnFilters ?? []));
       url.searchParams.set("globalFilter", globalFilter ?? "");
       url.searchParams.set("sorting", JSON.stringify(sorting ?? []));
+      url.searchParams.set("deleteType", deleteType);
 
       const { data: response } = await axios.get(url.href);
       return response;
