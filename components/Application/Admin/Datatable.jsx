@@ -74,6 +74,8 @@ const Datatable = ({
         filename: "csv-data",
       });
 
+      let csv;
+
       if (Object.keys(rowSelection).length > 0) {
         const rowData = selectedRows.map((row) => row.original);
         csv = generateCsv(csvConfig)(rowData);
@@ -158,7 +160,7 @@ const Datatable = ({
     },
     getRowId: (originalRow) => originalRow._id,
 
-    renderToolbarInternalActions: (table) => (
+    renderToolbarInternalActions: ({ table }) => (
       <>
         {/* built in button  */}
         <MRT_ToggleGlobalFilterButton table={table} />

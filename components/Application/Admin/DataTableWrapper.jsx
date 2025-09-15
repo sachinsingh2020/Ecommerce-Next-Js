@@ -30,6 +30,7 @@ const DataTableWrapper = ({
         queryKey={queryKey}
         fetchUrl={fetchUrl}
         columnsConfig={columnsConfig}
+        f
         initialPageSize={initialPageSize}
         exportEndpoint={exportEndpoint}
         deleteEndpoint={deleteEndpoint}

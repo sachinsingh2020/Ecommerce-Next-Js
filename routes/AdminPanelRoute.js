@@ -11,3 +11,6 @@ export const ADMIN_CATEGORY_ADD = "/admin/category/add";
 export const ADMIN_CATEGORY_SHOW = "/admin/category";
 export const ADMIN_CATEGORY_EDIT = (id) =>
   id ? `/admin/category/edit/${id}` : "";
+
+// Trash Route
+export const ADMIN_TRASH = "/admin/trash";
