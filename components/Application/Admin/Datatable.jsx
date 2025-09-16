@@ -51,6 +51,7 @@ const Datatable = ({
   const deleteMutation = useDeleteMutation(queryKey, deleteEndpoint);
   const handleDelete = (ids, deleteType) => {
     let c;
+
     if (deleteType === "PD") {
       c = confirm("Are you sure you want to delete the data permanently");
     } else {
@@ -147,7 +148,7 @@ const Datatable = ({
     onGlobalFilterChange: setGlobalFilter,
     onPaginationChange: setPagination,
     onSortingChange: setSorting,
-    rowCount: data?.meta?.totalRowCount ?? 0,
+    rowCount: meta?.totalRowCount ?? 0,
     onRowSelectionChange: setRowSelection,
     state: {
       columnFilters,
@@ -184,7 +185,10 @@ const Datatable = ({
               disabled={
                 !table.getIsSomeRowsSelected() && !table.getIsAllRowsSelected()
               }
-              onClick={() => handleDelete(Object.keys(rowSelection))}>
+              onClick={() =>
+                handleDelete(Object.keys(rowSelection), deleteType)
+              }
+            >
               <DeleteIcon />
             </IconButton>
           </Tooltip>
@@ -197,7 +201,8 @@ const Datatable = ({
                   !table.getIsSomeRowsSelected() &&
                   !table.getIsAllRowsSelected()
                 }
-                onClick={() => handleDelete(Object.keys(rowSelection), "RSD")}>
+                onClick={() => handleDelete(Object.keys(rowSelection), "RSD")}
+              >
                 <RestoreFromTrashIcon />
               </IconButton>
             </Tooltip>
@@ -209,7 +214,8 @@ const Datatable = ({
                 }
                 onClick={() =>
                   handleDelete(Object.keys(rowSelection), deleteType)
-                }>
+                }
+              >
                 <DeleteForeverIcon />
               </IconButton>
             </Tooltip>
@@ -227,12 +233,13 @@ const Datatable = ({
           type={"button"}
           text={
             <>
-              <SaveAltIcon />
+              <SaveAltIcon fontSize="25" />
               Export
             </>
           }
           loading={exportLoading}
           onClick={() => handleExport(table.getSelectedRowModel().rows)}
+          className={"cursor-pointer"}
         />
       </Tooltip>
     ),
