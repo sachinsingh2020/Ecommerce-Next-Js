@@ -12,5 +12,11 @@ export const ADMIN_CATEGORY_SHOW = "/admin/category";
 export const ADMIN_CATEGORY_EDIT = (id) =>
   id ? `/admin/category/edit/${id}` : "";
 
+// Product Routes
+export const ADMIN_PRODUCT_ADD = "/admin/product/add";
+export const ADMIN_PRODUCT_SHOW = "/admin/product";
+export const ADMIN_PRODUCT_EDIT = (id) =>
+  id ? `/admin/product/edit/${id}` : "";
+
 // Trash Route
 export const ADMIN_TRASH = "/admin/trash";
