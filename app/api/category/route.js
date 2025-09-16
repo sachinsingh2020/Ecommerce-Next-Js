@@ -13,7 +13,7 @@ export async function GET(request) {
     const searchParams = request.nextUrl.searchParams;
 
     const start = parseInt(searchParams.get("start") || 0, 10);
-    const size = parseInt(searchParams, get("size") || 10, 10);
+    const size = parseInt(searchParams.get("size") || 10, 10);
     const filters = JSON.parse(searchParams.get("filters") || "[]");
     const globalFilter = searchParams.get("globalFilter") || "";
     const sorting = JSON.parse(searchParams.get("sorting") || "[]");
