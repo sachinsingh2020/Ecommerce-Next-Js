@@ -27,6 +27,7 @@ import { showToast } from "@/lib/showToast";
 import useFetch from "@/hooks/useFetch";
 import Select from "@/components/Application/Select";
 import Editor from "@/components/Application/Admin/Editor";
+import MediaModel from "@/components/Application/Admin/MediaModel";
 
 const breadcrumbData = [
   { href: ADMIN_DASHBOARD, label: "Home" },
@@ -40,6 +41,10 @@ export default function AddProduct() {
   const { data: getCategory } = useFetch(
     "/api/category?deleteType=SD&&size=10000"
   );
+
+  // media model states
+  const [open, setOpen] = useState(false);
+  const [selectedMedia, setSelectedMedia] = useState([]);
 
   useEffect(() => {
     if (getCategory && getCategory.success) {
@@ -245,13 +250,32 @@ export default function AddProduct() {
                   />
                 </div>
                 <div className="mb-5 md:col-span-2">
-                  <FormLabel className={"mb-2"}>Description</FormLabel>
+                  <FormLabel className={"mb-2"}>
+                    Description
+                    <span className="text-red-500">*</span>
+                  </FormLabel>
                   <Editor onChange={editor} />
                   <FormMessage></FormMessage>
                 </div>
               </div>
 
-              <div className="mb-3">
+              <div className="md: col-span-2 border border-dashed rounded p-5 text-center">
+                <MediaModel
+                  open={open}
+                  setOpen={setOpen}
+                  selectedMedia={selectedMedia}
+                  setSelectedMedia={setSelectedMedia}
+                  isMultiple={true}
+                />
+                <div
+                  onClick={() => setOpen(true)}
+                  className="bg-gray-50 dark:bg-card border w-[200px] mx-auto p-5 cursor-pointer"
+                >
+                  <span className="font-semibold">Select Media</span>
+                </div>
+              </div>
+
+              <div className="mb-3 mt-5">
                 <ButtonLoading
                   type="submit"
                   text="Add Product"
