@@ -1,7 +1,7 @@
 import { isAuthenticated } from "@/lib/authentication";
 import { connectDB } from "@/lib/databaseConnection";
 import { catchError, response } from "@/lib/helperFunction";
-import CategoryModel from "@/models/Category.model";
+import ProductModel from "@/models/Product.model";
 
 export async function GET(request) {
   try {
@@ -15,15 +15,16 @@ export async function GET(request) {
       deletedAt: null,
     };
 
-    const getCategory = await CategoryModel.find(filter)
+    const getProduct = await ProductModel.find(filter)
+      .select("-media -description")
       .sort({ createdAt: -1 })
       .lean();
 
-    if (!getCategory) {
+    if (!getProduct) {
       return response(false, 404, "Collection Empty");
     }
 
-    return response(true, 200, "Data Found", getCategory);
+    return response(true, 200, "Data Found", getProduct);
   } catch (error) {
     return catchError(error);
   }
