@@ -28,6 +28,7 @@ import useFetch from "@/hooks/useFetch";
 import Select from "@/components/Application/Select";
 import Editor from "@/components/Application/Admin/Editor";
 import MediaModel from "@/components/Application/Admin/MediaModel";
+import Image from "next/image";
 
 const breadcrumbData = [
   { href: ADMIN_DASHBOARD, label: "Home" },
@@ -70,9 +71,9 @@ export default function AddProduct() {
       name: "",
       slug: "",
       category: "",
-      mrp: "",
-      sellingPrice: "",
-      discountPercentage: "",
+      mrp: 0,
+      sellingPrice: 0,
+      discountPercentage: 0,
       description: "",
     },
   });
@@ -89,9 +90,27 @@ export default function AddProduct() {
     form.setValue("description", data);
   };
 
+  // discount percentage calculation
+  useEffect(() => {
+    const mrp = form.getValues("mrp") || 0;
+    const sellingPrice = form.getValues("sellingPrice") || 0;
+
+    if (mrp > 0 && sellingPrice > 0) {
+      const discountPercentage = ((mrp - sellingPrice) / mrp) * 100;
+      form.setValue("discountPercentage", Math.round(discountPercentage));
+    }
+  }, [form.watch("mrp"), form.watch("sellingPrice")]);
+
   const onSubmit = async (values) => {
     setLoading(true);
     try {
+      if (selectedMedia.length <= 0) {
+        return showToast("error", "Please Select Media");
+      }
+
+      const mediaIds = selectedMedia.map((media) => media._id);
+      values.media = mediaIds;
+
       const { data: response } = await axios.post(
         "/api/product/create",
         values
@@ -240,6 +259,7 @@ export default function AddProduct() {
                         <FormControl>
                           <Input
                             type={"number"}
+                            readOnly
                             placeholder="Enter Discount Percentage"
                             {...field}
                           />
@@ -267,6 +287,23 @@ export default function AddProduct() {
                   setSelectedMedia={setSelectedMedia}
                   isMultiple={true}
                 />
+
+                {selectedMedia.length > 0 && (
+                  <div className="flex justify-center items-center flex-wrap mb-3 gap-2">
+                    {selectedMedia.map((media) => (
+                      <div key={media._id} className="h-24 w-24 border">
+                        <Image
+                          src={media.url}
+                          height={100}
+                          width={100}
+                          alt=""
+                          className="size-full object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 <div
                   onClick={() => setOpen(true)}
                   className="bg-gray-50 dark:bg-card border w-[200px] mx-auto p-5 cursor-pointer"
