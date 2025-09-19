@@ -3,6 +3,7 @@ import { connectDB } from "@/lib/databaseConnection";
 import { catchError, response } from "@/lib/helperFunction";
 import { zSchema } from "@/lib/zodSchema";
 import ProductModel from "@/models/Product.model";
+import { encode } from "entities";
 
 export async function PUT(request) {
   try {
@@ -15,7 +16,6 @@ export async function PUT(request) {
     const payload = await request.json();
 
     const schema = zSchema.pick({
-      _id: true,
       name: true,
       slug: true,
       category: true,
@@ -48,11 +48,11 @@ export async function PUT(request) {
     getProduct.mrp = validatedData.mrp;
     getProduct.sellingPrice = validatedData.sellingPrice;
     getProduct.discountPercentage = validatedData.discountPercentage;
-    getProduct.description = validatedData.description;
+    getProduct.description = encode(validatedData.description);
     getProduct.media = validatedData.media;
     await getProduct.save();
 
-    return response(true, 200, "Category updated successfully");
+    return response(true, 200, "Product updated successfully");
   } catch (error) {
     return catchError(error);
   }
