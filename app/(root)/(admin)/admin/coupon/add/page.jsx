@@ -32,7 +32,7 @@ import Image from "next/image";
 
 const breadcrumbData = [
   { href: ADMIN_DASHBOARD, label: "Home" },
-  { href: ADMIN_COUPON_SHOW, label: "Products" },
+  { href: ADMIN_COUPON_SHOW, label: "Coupons" },
   { href: "", label: "Add Coupon" },
 ];
 
@@ -42,7 +42,7 @@ export default function AddCoupon() {
   const formSchema = zSchema.pick({
     code: true,
     discountPercentage: true,
-    minShopingAmount: true,
+    minShoppingAmount: true,
     validity: true,
   });
 
@@ -51,8 +51,8 @@ export default function AddCoupon() {
     defaultValues: {
       code: "",
       discountPercentage: "",
-      minShopingAmount: "",
-      validity: "",
+      minShoppingAmount: "",
+      validity: " ",
     },
   });
 
@@ -60,6 +60,7 @@ export default function AddCoupon() {
     setLoading(true);
     try {
       const { data: response } = await axios.post("/api/coupon/create", values);
+      console.log({ response });
       if (!response.success) {
         throw new Error(response.message);
       }
@@ -67,7 +68,16 @@ export default function AddCoupon() {
 
       showToast("success", response.message);
     } catch (error) {
-      showToast("error", error.message);
+      console.log({ error });
+
+      // Check if it's an axios error
+      const errMessage =
+        error.response?.data?.message || // From API response
+        error.message || // Default JS error
+        error.props || // Your custom error with props
+        "Something went wrong"; // Fallback
+
+      showToast("error", errMessage);
     } finally {
       setLoading(false);
     }
