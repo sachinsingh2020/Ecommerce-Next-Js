@@ -18,5 +18,22 @@ export const ADMIN_PRODUCT_SHOW = "/admin/product";
 export const ADMIN_PRODUCT_EDIT = (id) =>
   id ? `/admin/product/edit/${id}` : "";
 
+// Product Variant Routes
+export const ADMIN_PRODUCT_VARIANT_ADD = "/admin/product-variant/add";
+export const ADMIN_PRODUCT_VARIANT_SHOW = "/admin/product-variant";
+export const ADMIN_PRODUCT_VARIANT_EDIT = (id) =>
+  id ? `/admin/product-variant/edit/${id}` : "";
+
+// Coupon Routes
+export const ADMIN_COUPON_ADD = "/admin/coupon/add";
+export const ADMIN_COUPON_SHOW = "/admin/coupon";
+export const ADMIN_COUPON_EDIT = (id) => (id ? `/admin/coupon/edit/${id}` : "");
+
+// Customer Route
+export const ADMIN_CUSTOMERS_SHOW = "/admin/customers";
+
+// Review Route
+export const ADMIN_REVIEW_SHOW = "/admin/review";
+
 // Trash Route
 export const ADMIN_TRASH = "/admin/trash";
