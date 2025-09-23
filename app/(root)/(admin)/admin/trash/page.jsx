@@ -6,8 +6,10 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   DT_CATEGORY_COLUMN,
   DT_COUPON_COLUMN,
+  DT_CUSTOMER_COLUMN,
   DT_PRODUCT_COLUMN,
   DT_PRODUCT_VARIANT_COLUMN,
+  DT_REVIEW_COLUMN,
 } from "@/lib/column";
 import { columnConfig } from "@/lib/helperFunction";
 import { ADMIN_DASHBOARD, ADMIN_TRASH } from "@/routes/AdminPanelRoute";
@@ -47,6 +49,20 @@ const TRASH_CONFIG = {
     fetchUrl: "/api/coupon",
     exportUrl: "/api/coupon/export",
     deleteUrl: "/api/coupon/delete",
+  },
+  customers: {
+    title: "Customers Trash",
+    columns: DT_CUSTOMER_COLUMN,
+    fetchUrl: "/api/customers",
+    exportUrl: "/api/customers/export",
+    deleteUrl: "/api/customers/delete",
+  },
+  review: {
+    title: "Review Trash",
+    columns: DT_REVIEW_COLUMN,
+    fetchUrl: "/api/review",
+    exportUrl: "/api/review/export",
+    deleteUrl: "/api/review/delete",
   },
 };
 
