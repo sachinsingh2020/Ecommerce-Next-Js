@@ -32,7 +32,7 @@ const LatestReview = () => {
             <TableCell>
               <div className="flex items-center">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <span>
+                  <span key={i}>
                     <IoStar className="text-yellow-500" />
                   </span>
                 ))}
