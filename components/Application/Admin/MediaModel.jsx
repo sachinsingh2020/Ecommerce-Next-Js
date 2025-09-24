@@ -14,6 +14,7 @@ import Image from "next/image";
 import axios from "axios";
 import ModalMediaBlock from "./ModalMediaBlock";
 import { showToast } from "@/lib/showToast";
+import ButtonLoading from "../ButtonLoading";
 
 const MediaModel = ({
   open,
@@ -73,10 +74,9 @@ const MediaModel = ({
         onInteractOutside={(e) => e.preventDefault()}
         className={
           "sm:max-w-[80%] h-screen p-0 py-10 bg-transparent border-0 shadow-none"
-        }
-      >
+        }>
         <DialogDescription className={"hidden"}></DialogDescription>
-        <div className="h-[90vh] bg-white p-3 rounded shadow">
+        <div className="h-[90vh] bg-white dark:bg-card p-3 rounded shadow">
           <DialogHeader className={"h-8 border-b"}>
             <DialogTitle>Media Selection</DialogTitle>
           </DialogHeader>
@@ -90,21 +90,35 @@ const MediaModel = ({
                 <span className="text-red-500">{error.message}</span>
               </div>
             ) : (
-              <div className="grid lg:grid-cols-6 grid-cols-3 gap-2">
-                {data?.pages?.map((page, index) => (
-                  <React.Fragment key={index}>
-                    {page?.mediaData?.map((media) => (
-                      <ModalMediaBlock
-                        key={media._id}
-                        media={media}
-                        selectedMedia={selectedMedia}
-                        setSelectedMedia={setSelectedMedia}
-                        isMultiple={isMultiple}
-                      />
-                    ))}
-                  </React.Fragment>
-                ))}
-              </div>
+              <>
+                <div className="grid lg:grid-cols-6 grid-cols-3 gap-2">
+                  {data?.pages?.map((page, index) => (
+                    <React.Fragment key={index}>
+                      {page?.mediaData?.map((media) => (
+                        <ModalMediaBlock
+                          key={media._id}
+                          media={media}
+                          selectedMedia={selectedMedia}
+                          setSelectedMedia={setSelectedMedia}
+                          isMultiple={isMultiple}
+                        />
+                      ))}
+                    </React.Fragment>
+                  ))}
+                </div>
+                {hasNextPage ? (
+                  <div className="flex justify-center py-5">
+                    <ButtonLoading
+                      type="button"
+                      onClick={() => fetchNextPage()}
+                      loading={isFetching}
+                      text="Load More"
+                    />
+                  </div>
+                ) : (
+                  <p className="text-center py-5">Nothing more to load</p>
+                )}
+              </>
             )}
           </div>
           <div className="h-10 pt-3 border-t flex justify-between">

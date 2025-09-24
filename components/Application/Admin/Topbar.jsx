@@ -9,6 +9,7 @@ import AdminSearch from "./AdminSearch";
 import logoBlack from "@/public/assets/images/logo-black.png";
 import logoWhite from "@/public/assets/images/logo-white.png";
 import Image from "next/image";
+import AdminMobileSearch from "./AdminMobileSearch";
 
 const Topbar = () => {
   const { toggleSidebar } = useSidebar();
@@ -37,8 +38,7 @@ const Topbar = () => {
       style={padding}
       className="fixed border h-14 w-full top-0 left-0 z-30 
       flex justify-between items-center 
-      bg-white dark:bg-card px-5"
-    >
+      bg-white dark:bg-card px-5">
       <div className="flex items-center md:hidden">
         <Image
           src={logoBlack.src}
@@ -59,14 +59,14 @@ const Topbar = () => {
         <AdminSearch />
       </div>
       <div className="flex items-center gap-2">
+        <AdminMobileSearch />
         <ThemeSwitch />
         <UserDropdown />
         <Button
           onClick={toggleSidebar}
           type="button"
           size={"icon"}
-          className="ms-2 md:hidden"
-        >
+          className="ms-2 md:hidden">
           <RiMenu4Fill />
         </Button>
       </div>

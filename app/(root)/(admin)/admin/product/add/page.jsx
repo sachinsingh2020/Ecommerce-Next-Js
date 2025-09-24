@@ -138,7 +138,7 @@ export default function AddProduct() {
         <CardContent className={"pb-5"}>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <div className="grid md:grid-cols-2 gap-5">
+              <div className="grid md:grid-cols-2 grid-cols-1   gap-5">
                 <div className="">
                   <FormField
                     control={form.control}
@@ -306,8 +306,7 @@ export default function AddProduct() {
 
                 <div
                   onClick={() => setOpen(true)}
-                  className="bg-gray-50 dark:bg-card border w-[200px] mx-auto p-5 cursor-pointer"
-                >
+                  className="bg-gray-50 dark:bg-card border w-[200px] mx-auto p-5 cursor-pointer">
                   <span className="font-semibold">Select Media</span>
                 </div>
               </div>
