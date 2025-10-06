@@ -11,7 +11,7 @@ const kumbh = Kumbh_Sans({
 
 const layout = ({ children }) => {
   return (
-    <div>
+    <div className={kumbh.className}>
       <Header />
       <main>{children}</main>
       <Footer />
