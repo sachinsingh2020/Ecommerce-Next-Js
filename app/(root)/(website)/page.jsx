@@ -1,3 +1,9 @@
+import MainSlider from "@/components/Application/Website/MainSlider";
+
 export default function Home() {
-  return <div>Home Page</div>;
+  return (
+    <section>
+      <MainSlider />
+    </section>
+  );
 }
