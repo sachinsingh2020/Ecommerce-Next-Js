@@ -1,3 +1,4 @@
+import FeaturedProduct from "@/components/Application/Website/FeaturedProduct";
 import MainSlider from "@/components/Application/Website/MainSlider";
 import banner1 from "@/public/assets/images/banner1.png";
 import banner2 from "@/public/assets/images/banner2.png";
@@ -36,6 +37,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      <FeaturedProduct />
     </>
   );
 }
