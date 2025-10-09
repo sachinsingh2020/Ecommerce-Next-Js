@@ -1,6 +1,6 @@
 import axios from "axios";
 import Link from "next/link";
-import React, { useEffect } from "react";
+import React from "react";
 import { IoIosArrowRoundForward } from "react-icons/io";
 
 const FeaturedProduct = () => {
