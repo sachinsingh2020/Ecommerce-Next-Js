@@ -8,7 +8,7 @@ export async function GET() {
     await connectDB();
 
     const getProduct = await ProductModel.find({ deleteType: null })
-      .populate("media", "_id secure_url")
+      .populate("media")
       .limit(8)
       .lean();
 

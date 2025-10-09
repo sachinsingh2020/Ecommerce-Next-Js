@@ -4,6 +4,8 @@ import banner1 from "@/public/assets/images/banner1.png";
 import banner2 from "@/public/assets/images/banner2.png";
 import Image from "next/image";
 import Link from "next/link";
+import advertisingBanner from "@/public/assets/images/advertising-banner.png";
+import Testimonial from "@/components/Application/Website/Testimonial";
 
 export default function Home() {
   return (
@@ -38,6 +40,15 @@ export default function Home() {
         </div>
       </section>
       <FeaturedProduct />
+      <section className="sm:pt-20 pt-5 pb-10">
+        <Image
+          src={advertisingBanner.src}
+          height={advertisingBanner.height}
+          width={advertisingBanner.width}
+          alt="Advertisement"
+        />
+        <Testimonial />
+      </section>
     </>
   );
 }
