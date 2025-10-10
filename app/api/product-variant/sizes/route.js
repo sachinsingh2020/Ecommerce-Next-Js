@@ -5,18 +5,17 @@ import ProductVariantModel from "@/models/ProductVariant.model";
 export async function GET() {
   try {
     await connectDB();
-    const getSize = await ProductVariantModel.aggregate([{ sort: { _id: 1 } }]);
-    // const getSize = await ProductVariantModel.aggregate([
-    //   { sort: { _id: 1 } },
-    //   {
-    //     $group: {
-    //       _id: "$size",
-    //       first: { $first: "$_id" },
-    //     },
-    //   },
-    //   { $sort: { first: 1 } },
-    //   { $project: { _id: 0, size: "$_id" } },
-    // ]);
+    const getSize = await ProductVariantModel.aggregate([
+      { $sort: { _id: 1 } },
+      {
+        $group: {
+          _id: "$size",
+          first: { $first: "$_id" },
+        },
+      },
+      { $sort: { first: 1 } },
+      { $project: { _id: 0, size: "$_id" } },
+    ]);
 
     console.log("get the size", { getSize });
 
