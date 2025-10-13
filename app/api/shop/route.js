@@ -28,7 +28,7 @@ export async function GET(request) {
     if (sortOption === "asc") sortquery = { name: 1 };
     if (sortOption === "desc") sortquery = { name: -1 };
     if (sortOption === "price_low_high") sortquery = { sellingPrice: 1 };
-    if (sortOption === "price_high_low") sortquery = { sellingPrice: 1 };
+    if (sortOption === "price_high_low") sortquery = { sellingPrice: -1 };
 
     // find category by slug
     let categoryId = null;
@@ -39,7 +39,7 @@ export async function GET(request) {
         slug: categorySlug,
       })
         .select("_id")
-        .len();
+        .lean();
       if (categoryData) categoryId = categoryData._id;
     }
 

@@ -15,6 +15,7 @@ import {
 import useWindowSize from "@/hooks/useWindowSize";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
+import { useInfiniteQuery } from "@tanstack/react-query";
 
 const breadcrumb = {
   title: "Shop",
@@ -30,11 +31,26 @@ export default function ShopPage() {
 
   const fetchProduct = async (pageParam) => {
     const { data: getProduct } = await axios.get(
-      `/api/shop?page=${pageParam}&limit=${limit}&sort=${sorting}${searchParams}`
+      `/api/shop?page=${pageParam}&limit=${limit}&sort=${sorting}&${searchParams}`
     );
-    console.log(getProduct);
+
+    if (!getProduct.success) {
+      return;
+    }
+
+    return getProduct.data;
   };
-  fetchProduct(0);
+
+  const { error, data, isFetching, fetchNextPage, hasNextPage } =
+    useInfiniteQuery({
+      queryKey: ["products", limit, sorting, searchParams],
+      queryFn: async ({ pageParam }) => await fetchProduct(pageParam),
+      initialPageParam: 0,
+      getNextPageParam: (lastPage) => {
+        return lastPage.nextPage;
+      },
+    });
+  console.log(data);
 
   return (
     <div>
@@ -49,8 +65,7 @@ export default function ShopPage() {
         ) : (
           <Sheet
             open={isMobileFilter}
-            onOpenChange={() => setIsMobileFilter(false)}
-          >
+            onOpenChange={() => setIsMobileFilter(false)}>
             <SheetTrigger>Open</SheetTrigger>
             <SheetContent side="left" className={"block"}>
               <SheetHeader className={"border-b"}>
