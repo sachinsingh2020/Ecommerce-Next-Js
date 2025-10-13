@@ -13,6 +13,8 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import useWindowSize from "@/hooks/useWindowSize";
+import axios from "axios";
+import { useSearchParams } from "next/navigation";
 
 const breadcrumb = {
   title: "Shop",
@@ -20,10 +22,19 @@ const breadcrumb = {
 };
 
 export default function ShopPage() {
+  const searchParams = useSearchParams().toString();
   const [limit, setLimit] = useState(9);
   const [sorting, setSorting] = useState("default_sorting");
   const [isMobileFilter, setIsMobileFilter] = useState(false);
   const windowSize = useWindowSize();
+
+  const fetchProduct = async (pageParam) => {
+    const { data: getProduct } = await axios.get(
+      `/api/shop?page=${pageParam}&limit=${limit}&sort=${sorting}${searchParams}`
+    );
+    console.log(getProduct);
+  };
+  fetchProduct(0);
 
   return (
     <div>
