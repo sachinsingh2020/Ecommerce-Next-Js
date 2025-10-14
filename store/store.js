@@ -2,6 +2,7 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import persistReducer from "redux-persist/es/persistReducer";
 import persistStore from "redux-persist/es/persistStore";
 import authReducer from "./reducer/authReducer";
+import cartReducer from "./reducer/cartReducer";
 
 // 👇 Safe fallback storage for SSR (Noop storage)
 const createNoopStorage = () => {
@@ -26,6 +27,7 @@ const storage =
 
 const rootReducer = combineReducers({
   authStore: authReducer,
+  cartStore: cartReducer,
 });
 
 const persistConfig = {

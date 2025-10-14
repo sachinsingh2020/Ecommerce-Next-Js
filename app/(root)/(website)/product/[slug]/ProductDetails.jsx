@@ -8,15 +8,29 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { WEBSITE_SHOP, WEBSTIE_PRODUCT_DETAILS } from "@/routes/WebsiteRoute";
+import {
+  WEBSITE_CART,
+  WEBSITE_SHOP,
+  WEBSTIE_PRODUCT_DETAILS,
+} from "@/routes/WebsiteRoute";
 import Link from "next/link";
 import Image from "next/image";
 import imgPlaceholder from "@/public/assets/images/img-placeholder.webp";
 import { IoStar } from "react-icons/io5";
 import { decode } from "entities";
+import { HiMinus, HiPlus } from "react-icons/hi2";
+import ButtonLoading from "@/components/Application/ButtonLoading";
+import { useDispatch } from "react-redux";
+import { addIntoCart } from "@/store/reducer/cartReducer";
+import { showToast } from "@/lib/showToast";
+import { Button } from "@/components/ui/button";
 
 const ProductDetails = ({ product, variant, colors, sizes, reviewCount }) => {
+  const dispatch = useDispatch();
+
   const [activeThumb, setActiveThumb] = useState();
+  const [qty, setQty] = useState(1);
+  const [isAddedIntoCart, setIsAddedIntoCart] = useState(false);
 
   useEffect(() => {
     setActiveThumb(variant.media[0].secure_url);
@@ -24,6 +38,35 @@ const ProductDetails = ({ product, variant, colors, sizes, reviewCount }) => {
 
   const handleThumb = (thumbUrl) => {
     setActiveThumb(thumbUrl);
+  };
+
+  const handleQty = (actionType) => {
+    if (actionType === "inc") {
+      setQty((prev) => prev + 1);
+    } else {
+      if (qty !== 1) {
+        setQty((prev) => prev - 1);
+      }
+    }
+  };
+
+  const handleAddToCart = () => {
+    const cartProduct = {
+      productId: product._id,
+      variantId: variant._id,
+      name: product.name,
+      url: product.slug,
+      size: variant.size,
+      color: variant.color,
+      mrp: variant.mrp,
+      sellingPrice: variant.sellingPrice,
+      media: variant?.media[0]?.secure_url,
+      qty: qty,
+    };
+
+    dispatch(addIntoCart(cartProduct));
+    setIsAddedIntoCart(true);
+    showToast("success", "Product added into cart");
   };
 
   return (
@@ -106,24 +149,84 @@ const ProductDetails = ({ product, variant, colors, sizes, reviewCount }) => {
           </div>
           <div
             className="line-clamp-3"
-            dangerouslySetInnerHTML={{ __html: decode(product.description) }}
-          ></div>
+            dangerouslySetInnerHTML={{
+              __html: decode(product.description),
+            }}></div>
           <div className="mt-5">
             <p className="mb-2">
-              <span className="font-semibold">Color: {variant?.color}</span>
+              <span className="font-semibold">Color:</span> {variant?.color}
             </p>
             <div className="flex gap-5">
               {colors.map((color) => (
                 <Link
-                  href={""}
+                  href={`${WEBSTIE_PRODUCT_DETAILS(
+                    product?.slug
+                  )}?color=${color}&size=${variant.size}`}
                   key={color}
                   className={`border py-1 px-3 rounded-lg cursor-pointer hover:bg-primary hover:text-white ${
                     color === variant.color ? "bg-primary text-white" : ""
-                  }`}
-                >
+                  }`}>
                   {color}
                 </Link>
               ))}
+            </div>
+          </div>
+          <div className="mt-5">
+            <p className="mb-2">
+              <span className="font-semibold">Size: </span>
+              {variant?.size}
+            </p>
+
+            <div className="flex gap-5">
+              {sizes.map((size) => (
+                <Link
+                  href={`${WEBSTIE_PRODUCT_DETAILS(product?.slug)}?color=${
+                    variant.color
+                  }&size=${size}`}
+                  key={size}
+                  className={`border py-1 px-3 rounded-lg cursor-pointer hover:bg-primary hover:text-white ${
+                    size === variant.size ? "bg-primary text-white" : ""
+                  }`}>
+                  {size}
+                </Link>
+              ))}
+            </div>
+          </div>
+          <div className="mt-5">
+            <p className="font-bold mb-2">Quantity</p>
+            <div className="flex items-center h-10 border w-fit rounded-full">
+              <button
+                type="button"
+                onClick={() => handleQty("desc")}
+                className="h-full w-10 flex justify-center items-center cursor-pointer">
+                <HiMinus />
+              </button>
+              <input
+                type="text"
+                value={qty}
+                className="w-14 text-center border-none outline-offset-0"
+                readOnly
+              />
+              <button
+                type="button"
+                onClick={() => handleQty("inc")}
+                className="h-full w-10 flex justify-center items-center cursor-pointer">
+                <HiPlus />
+              </button>
+            </div>
+            <div className="mt-5">
+              {!isAddedIntoCart ? (
+                <ButtonLoading
+                  type={"button"}
+                  text={"Add to Cart"}
+                  className={"w-full rounded-full py-6 text-md cursor-pointer"}
+                  onClick={handleAddToCart}
+                />
+              ) : (
+                <Button type="button" asChild>
+                  <Link href={WEBSITE_CART}>Go To Cart</Link>
+                </Button>
+              )}
             </div>
           </div>
         </div>
