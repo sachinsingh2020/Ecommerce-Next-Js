@@ -12,7 +12,7 @@ export async function GET(request) {
     const size = searchParams.get("size");
     const color = searchParams.get("color");
     const minPrice = parseInt(searchParams.get("minPrice")) || 0;
-    const maxPrice = parseInt(searchParams.get("maxPrice")) || 0;
+    const maxPrice = parseInt(searchParams.get("maxPrice")) || 1000000;
     const categorySlug = searchParams.get("category");
     const search = searchParams.get("q");
 
@@ -31,21 +31,23 @@ export async function GET(request) {
     if (sortOption === "price_high_low") sortquery = { sellingPrice: -1 };
 
     // find category by slug
-    let categoryId = null;
+    let categoryId = [];
 
     if (categorySlug) {
-      const categoryData = await CategoryModel.findOne({
+      const slugs = categorySlug.split(",");
+      const categoryData = await CategoryModel.find({
         deletedAt: null,
-        slug: categorySlug,
+        slug: { $in: slugs },
       })
         .select("_id")
         .lean();
-      if (categoryData) categoryId = categoryData._id;
+
+      categoryId = categoryData.map((category) => category._id);
     }
 
     // match stage
     let matchStage = {};
-    if (categoryId) matchStage.category = categoryId; //filter by category
+    if (categoryId.length > 0) matchStage.category = { $in: categoryId }; //filter by category
 
     if (search) {
       matchStage.name = { $regex: search, $options: "i" };
@@ -73,9 +75,11 @@ export async function GET(request) {
               as: "variant",
               cond: {
                 $and: [
-                  size ? { $eq: ["$$variant.size", size] } : { $literal: true },
+                  size
+                    ? { $in: ["$$variant.size", size.split(",")] }
+                    : { $literal: true },
                   color
-                    ? { $eq: ["$$variant.color", color] }
+                    ? { $in: ["$$variant.color", color.split(",")] }
                     : { $literal: true },
                   { $gte: ["$$variant.sellingPrice", minPrice] },
                   { $lte: ["$$variant.sellingPrice", maxPrice] },
@@ -83,6 +87,11 @@ export async function GET(request) {
               },
             },
           },
+        },
+      },
+      {
+        $match: {
+          variants: { $ne: [] },
         },
       },
       {

@@ -16,6 +16,8 @@ import useWindowSize from "@/hooks/useWindowSize";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import ProductBox from "@/components/Application/Website/ProductBox";
+import ButtonLoading from "@/components/Application/ButtonLoading";
 
 const breadcrumb = {
   title: "Shop",
@@ -65,7 +67,8 @@ export default function ShopPage() {
         ) : (
           <Sheet
             open={isMobileFilter}
-            onOpenChange={() => setIsMobileFilter(false)}>
+            onOpenChange={() => setIsMobileFilter(false)}
+          >
             <SheetTrigger>Open</SheetTrigger>
             <SheetContent side="left" className={"block"}>
               <SheetHeader className={"border-b"}>
@@ -88,6 +91,33 @@ export default function ShopPage() {
             mobileFilterOpen={isMobileFilter}
             setMobileFilterOpen={setIsMobileFilter}
           />
+          {isFetching && (
+            <div className="p-3 font-semibold text-center">Loading...</div>
+          )}
+          {error && (
+            <div className="p-3 font-semibold text-center">{error.message}</div>
+          )}
+          <div className="grid lg:grid-cols-3 grid-cols-2 lg:gap-10 gap-5 mt-10">
+            {data &&
+              data.pages.map((page) =>
+                page.products.map((product) => (
+                  <ProductBox key={product._id} product={product} />
+                ))
+              )}
+          </div>
+          {/* load more button  */}
+          <div className="flex justify-center mt-10">
+            {hasNextPage ? (
+              <ButtonLoading
+                type={"button"}
+                loading={isFetching}
+                text={"Load More"}
+                onClick={fetchNextPage}
+              />
+            ) : (
+              <>{isFetching && <span>No more data to load</span>}</>
+            )}
+          </div>
         </div>
       </section>
     </div>
