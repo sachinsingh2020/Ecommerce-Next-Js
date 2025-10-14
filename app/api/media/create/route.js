@@ -14,7 +14,6 @@ export async function POST(request) {
 
     await connectDB();
     const newMedia = await MediaModel.insertMany(payload);
-    console.log("sachin singh");
     return response(true, 200, "Media uploaded successfully", newMedia);
   } catch (error) {
     if (payload && payload.length > 0) {

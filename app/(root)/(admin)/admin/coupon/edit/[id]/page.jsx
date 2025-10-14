@@ -69,15 +69,12 @@ export default function EditCoupon({ params }) {
     setLoading(true);
     try {
       const { data: response } = await axios.put("/api/coupon/update", values);
-      console.log({ response });
       if (!response.success) {
         throw new Error(response.message);
       }
 
       showToast("success", response.message);
     } catch (error) {
-      console.log({ error });
-
       // Check if it's an axios error
       const errMessage =
         error.response?.data?.message || // From API response

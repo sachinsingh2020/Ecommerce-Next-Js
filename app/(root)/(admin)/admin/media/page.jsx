@@ -43,7 +43,6 @@ export default function MediaPage() {
     const { data: response } = await axios.get(
       `/api/media?page=${page}&&limit=10&&deleteType=${deleteType}`
     );
-    console.log({ response });
     return response;
   };
 
@@ -107,7 +106,8 @@ export default function MediaPage() {
                   <Button
                     className={"cursor-pointer"}
                     type="button"
-                    variant="destructive">
+                    variant="destructive"
+                  >
                     <Link href={`${ADMIN_MEDIA_SHOW}?trashof=media`}>
                       Trash
                     </Link>
@@ -136,19 +136,22 @@ export default function MediaPage() {
                 {deleteType === "SD" ? (
                   <Button
                     variant={"destructive"}
-                    onClick={() => handleDelete(selectedMedia, deleteType)}>
+                    onClick={() => handleDelete(selectedMedia, deleteType)}
+                  >
                     Move Into Trash
                   </Button>
                 ) : (
                   <>
                     <Button
                       className={"bg-green-500 hover:bg-green-600"}
-                      onClick={() => handleDelete(selectedMedia, "RSD")}>
+                      onClick={() => handleDelete(selectedMedia, "RSD")}
+                    >
                       Restore
                     </Button>
                     <Button
                       variant={"destructive"}
-                      onClick={() => handleDelete(selectedMedia, deleteType)}>
+                      onClick={() => handleDelete(selectedMedia, deleteType)}
+                    >
                       Delete Permanently
                     </Button>
                   </>

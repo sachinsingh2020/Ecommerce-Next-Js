@@ -15,7 +15,6 @@ export async function PUT(request) {
     const payload = await request.json();
     const ids = payload.ids || [];
     const deleteType = payload.deleteType;
-    console.log({ payload });
 
     if (!Array.isArray(ids) || ids.length === 0) {
       return response(false, 400, "Invalid or Empty id list");

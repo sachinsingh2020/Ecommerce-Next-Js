@@ -17,8 +17,6 @@ export async function GET() {
       { $project: { _id: 0, size: "$_id" } },
     ]);
 
-    console.log("get the size", { getSize });
-
     if (!getSize.length) {
       return response(false, 404, "Size not found.");
     }

@@ -88,7 +88,6 @@ export default function EditProduct({ params }) {
   useEffect(() => {
     if (getProduct && getProduct.success) {
       const product = getProduct.data;
-      console.log({ product });
       form.reset({
         _id: product?._id,
         name: product?.name,
@@ -340,7 +339,8 @@ export default function EditProduct({ params }) {
 
                 <div
                   onClick={() => setOpen(true)}
-                  className="bg-gray-50 dark:bg-card border w-[200px] mx-auto p-5 cursor-pointer">
+                  className="bg-gray-50 dark:bg-card border w-[200px] mx-auto p-5 cursor-pointer"
+                >
                   <span className="font-semibold">Select Media</span>
                 </div>
               </div>

@@ -60,7 +60,6 @@ export default function AddCoupon() {
     setLoading(true);
     try {
       const { data: response } = await axios.post("/api/coupon/create", values);
-      console.log({ response });
       if (!response.success) {
         throw new Error(response.message);
       }
@@ -68,8 +67,6 @@ export default function AddCoupon() {
 
       showToast("success", response.message);
     } catch (error) {
-      console.log({ error });
-
       // Check if it's an axios error
       const errMessage =
         error.response?.data?.message || // From API response

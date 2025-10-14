@@ -18,10 +18,9 @@ export async function POST(request) {
 
     const userId = decoded.payload.userId;
 
-    if(!isValidObjectId(userId)){
-      return response(false, 400, "Invalid User ID",userId);
+    if (!isValidObjectId(userId)) {
+      return response(false, 400, "Invalid User ID", userId);
     }
-    console.log({ userId });
 
     // get user
     const user = await UserModel.findById(userId);

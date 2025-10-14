@@ -52,7 +52,6 @@ export default function ShopPage() {
         return lastPage.nextPage;
       },
     });
-  console.log(data);
 
   return (
     <div>

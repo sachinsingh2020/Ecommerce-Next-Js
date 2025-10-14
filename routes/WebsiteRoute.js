@@ -8,3 +8,6 @@ export const WEBSITE_RESETPASSWORD = "/auth/reset-password";
 export const USER_DASHBOARD = "/my-account";
 
 export const WEBSITE_SHOP = "/shop";
+
+export const WEBSTIE_PRODUCT_DETAILS = (slug) =>
+  slug ? `/product/${slug}` : "/product";
