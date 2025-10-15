@@ -284,7 +284,7 @@ const ProductDetails = ({ product, variant, colors, sizes, reviewCount }) => {
         </div>
       </div>
 
-      <ProductReview />
+      <ProductReview productId={product._id} />
     </div>
   );
 };
