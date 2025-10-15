@@ -38,6 +38,9 @@ export async function GET(request) {
       {
         $sort: { createdAt: -1 },
       },
+      {
+        $skip: skip,
+      },
       { $limit: limit + 1 },
       {
         $project: {

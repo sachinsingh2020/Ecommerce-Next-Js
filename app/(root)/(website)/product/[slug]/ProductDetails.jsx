@@ -31,7 +31,6 @@ import ProductReview from "@/components/Application/Website/ProductReview";
 const ProductDetails = ({ product, variant, colors, sizes, reviewCount }) => {
   const dispatch = useDispatch();
   const cartStore = useSelector((store) => store.cartStore);
-  console.log({ cartStore });
 
   const [activeThumb, setActiveThumb] = useState();
   const [qty, setQty] = useState(1);
@@ -179,8 +178,7 @@ const ProductDetails = ({ product, variant, colors, sizes, reviewCount }) => {
             className="line-clamp-3"
             dangerouslySetInnerHTML={{
               __html: decode(product.description),
-            }}
-          ></div>
+            }}></div>
           <div className="mt-5">
             <p className="mb-2">
               <span className="font-semibold">Color:</span> {variant?.color}
@@ -195,8 +193,7 @@ const ProductDetails = ({ product, variant, colors, sizes, reviewCount }) => {
                   key={color}
                   className={`border py-1 px-3 rounded-lg cursor-pointer hover:bg-primary hover:text-white ${
                     color === variant.color ? "bg-primary text-white" : ""
-                  }`}
-                >
+                  }`}>
                   {color}
                 </Link>
               ))}
@@ -218,8 +215,7 @@ const ProductDetails = ({ product, variant, colors, sizes, reviewCount }) => {
                   key={size}
                   className={`border py-1 px-3 rounded-lg cursor-pointer hover:bg-primary hover:text-white ${
                     size === variant.size ? "bg-primary text-white" : ""
-                  }`}
-                >
+                  }`}>
                   {size}
                 </Link>
               ))}
@@ -231,8 +227,7 @@ const ProductDetails = ({ product, variant, colors, sizes, reviewCount }) => {
               <button
                 type="button"
                 onClick={() => handleQty("desc")}
-                className="h-full w-10 flex justify-center items-center cursor-pointer"
-              >
+                className="h-full w-10 flex justify-center items-center cursor-pointer">
                 <HiMinus />
               </button>
               <input
@@ -244,8 +239,7 @@ const ProductDetails = ({ product, variant, colors, sizes, reviewCount }) => {
               <button
                 type="button"
                 onClick={() => handleQty("inc")}
-                className="h-full w-10 flex justify-center items-center cursor-pointer"
-              >
+                className="h-full w-10 flex justify-center items-center cursor-pointer">
                 <HiPlus />
               </button>
             </div>
@@ -261,8 +255,7 @@ const ProductDetails = ({ product, variant, colors, sizes, reviewCount }) => {
                 <Button
                   className={"w-full rounded-full py-6 text-md cursor-pointer"}
                   type="button"
-                  asChild
-                >
+                  asChild>
                   <Link href={WEBSITE_CART}>Go To Cart</Link>
                 </Button>
               )}
@@ -278,8 +271,9 @@ const ProductDetails = ({ product, variant, colors, sizes, reviewCount }) => {
           </div>
           <div className="p-3">
             <div
-              dangerouslySetInnerHTML={{ __html: encode(product.description) }}
-            ></div>
+              dangerouslySetInnerHTML={{
+                __html: encode(product.description),
+              }}></div>
           </div>
         </div>
       </div>
