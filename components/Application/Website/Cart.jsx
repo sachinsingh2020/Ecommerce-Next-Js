@@ -15,7 +15,7 @@ import { removeFromCart } from "@/store/reducer/cartReducer";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { WEBSITE_CART, WEBSITE_CHECKOUT } from "@/routes/WebsiteRoute";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { showToast } from "@/lib/showToast";
 
 const Cart = () => {
@@ -23,10 +23,33 @@ const Cart = () => {
   const cart = useSelector((store) => store.cartStore);
 
   const [open, setOpen] = useState(false);
+  const [subTotal, setSubTotal] = useState(0);
+  const [discount, setDiscount] = useState(0);
+
+  useEffect(() => {
+    const cartProducts = cart.products;
+    const totalAmount = cartProducts.reduce(
+      (sum, product) => sum + product.sellingPrice * product.qty,
+      0
+    );
+
+    const discount = cartProducts.reduce(
+      (sum, product) =>
+        sum + (product.mrp - product.sellingPrice) * product.qty,
+      0
+    );
+
+    setSubTotal(totalAmount);
+    setDiscount(discount);
+  }, [cart]);
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger className={"relative"}>
         <BsCart2 size={25} className="text-gray-500 hover:text-primary" />
+        <span className="absolute bg-red-500 text-white text-xs rounded-full w-4 h-4 flex justify-center items-center -right-2 -top-1">
+          {cart.count}
+        </span>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader className={"py-2"}>
@@ -34,7 +57,7 @@ const Cart = () => {
           <SheetDescription></SheetDescription>
         </SheetHeader>
         <div className="h-[calc(100vh-40px)] pb-10">
-          <div className="h-[calc(100%-110px)] overflow-auto px-2">
+          <div className="h-[calc(100%-128px)] overflow-auto px-2">
             {cart.count === 0 && (
               <div className="h-full flex justify-center items-center text-xl font-semibold">
                 Your cart is empty
@@ -86,14 +109,24 @@ const Cart = () => {
               </div>
             ))}
           </div>
-          <div className="h-28 border-t pt-5 px-4">
+          <div className="h-32 border-t pt-5 px-4">
             <h2 className="flex justify-between items-center text-lg font-semibold">
               <span>Subtotal</span>
-              <span>0</span>
+              <span>
+                {subTotal.toLocaleString("en-IN", {
+                  style: "currency",
+                  currency: "INR",
+                })}
+              </span>
             </h2>
             <h2 className="flex justify-between items-center text-lg font-semibold">
               <span>Discount</span>
-              <span>0</span>
+              <span>
+                {discount.toLocaleString("en-IN", {
+                  style: "currency",
+                  currency: "INR",
+                })}
+              </span>
             </h2>
             <div className="flex justify-between gap-5 mt-3">
               <Button
