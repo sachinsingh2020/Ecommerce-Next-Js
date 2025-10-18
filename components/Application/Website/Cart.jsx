@@ -51,7 +51,7 @@ const Cart = () => {
           {cart.count}
         </span>
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className={"sm:max-w-[450px] w-full"}>
         <SheetHeader className={"py-2"}>
           <SheetTitle className={"text-2xl"}>My Cart</SheetTitle>
           <SheetDescription></SheetDescription>
@@ -66,8 +66,7 @@ const Cart = () => {
             {cart.products?.map((product) => (
               <div
                 key={product.variantId}
-                className="flex justify-between items-center gap-5 mb-4 border-b pb-4"
-              >
+                className="flex justify-between items-center gap-5 mb-4 border-b pb-4">
                 <div className="flex gap-5 items-center">
                   <Image
                     src={product?.media || imgPlaceholder.src}
@@ -94,8 +93,7 @@ const Cart = () => {
                           variantId: product.variantId,
                         })
                       )
-                    }
-                  >
+                    }>
                     Remove
                   </button>
                   <p className="font-semibold">
@@ -134,23 +132,20 @@ const Cart = () => {
                 asChild
                 variant={"secondary"}
                 className={"w-[170px]"}
-                onClick={() => setOpen(false)}
-              >
+                onClick={() => setOpen(false)}>
                 <Link href={WEBSITE_CART}>View Cart</Link>
               </Button>
               <Button
                 type="button"
                 asChild
                 className={"w-[170px]"}
-                onClick={() => setOpen(false)}
-              >
+                onClick={() => setOpen(false)}>
                 {cart.count ? (
                   <Link href={WEBSITE_CHECKOUT}>Checkout</Link>
                 ) : (
                   <button
                     type="button"
-                    onClick={() => showToast("error", "Your cart is empty")}
-                  >
+                    onClick={() => showToast("error", "Your cart is empty")}>
                     Checkout
                   </button>
                 )}
