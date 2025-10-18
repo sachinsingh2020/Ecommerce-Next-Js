@@ -1,15 +1,23 @@
 "use client";
 import WebsiteBreadcrumb from "@/components/Application/Website/WebsiteBreadcrumb";
 import { Button } from "@/components/ui/button";
-import { WEBSITE_SHOP, WEBSTIE_PRODUCT_DETAILS } from "@/routes/WebsiteRoute";
+import {
+  WEBSITE_CHECKOUT,
+  WEBSITE_SHOP,
+  WEBSTIE_PRODUCT_DETAILS,
+} from "@/routes/WebsiteRoute";
 import Image from "next/image";
 import Link from "next/link";
 import { useDispatch, useSelector } from "react-redux";
 import imgPlaceholder from "@/public/assets/images/img-placeholder.webp";
 import { HiMinus, HiPlus } from "react-icons/hi2";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IoCloseCircleOutline } from "react-icons/io5";
-import { removeFromCart } from "@/store/reducer/cartReducer";
+import {
+  decreaseQuantity,
+  increaseQuantity,
+  removeFromCart,
+} from "@/store/reducer/cartReducer";
 
 const breadCrumb = {
   title: "Cart",
@@ -19,17 +27,25 @@ const breadCrumb = {
 export default function CartPage() {
   const dispatch = useDispatch();
   const cart = useSelector((store) => store.cartStore);
-  const [qty, setQty] = useState(1);
+  const [subTotal, setSubTotal] = useState(0);
+  const [discount, setDiscount] = useState(0);
 
-  const handleQty = (actionType) => {
-    if (actionType === "inc") {
-      setQty((prev) => prev + 1);
-    } else {
-      if (qty !== 1) {
-        setQty((prev) => prev - 1);
-      }
-    }
-  };
+  useEffect(() => {
+    const cartProducts = cart.products;
+    const totalAmount = cartProducts.reduce(
+      (sum, product) => sum + product.sellingPrice * product.qty,
+      0
+    );
+
+    const discount = cartProducts.reduce(
+      (sum, product) =>
+        sum + (product.mrp - product.sellingPrice) * product.qty,
+      0
+    );
+
+    setSubTotal(totalAmount);
+    setDiscount(discount);
+  }, [cart]);
   return (
     <div>
       <WebsiteBreadcrumb props={breadCrumb} />
@@ -59,8 +75,7 @@ export default function CartPage() {
                 {cart.products.map((product) => (
                   <tr
                     key={product.variantId}
-                    className="md:table-row block border-b"
-                  >
+                    className="md:table-row block border-b">
                     <td className="p-3">
                       <div className="flex items-center gap-5">
                         <Image
@@ -96,22 +111,34 @@ export default function CartPage() {
                           <div className="flex justify-center items-center md:h-10 h-7 border w-fit rounded-full">
                             <button
                               type="button"
-                              onClick={() => handleQty("desc")}
-                              className="h-full w-10 flex justify-center items-center cursor-pointer"
-                            >
+                              onClick={() =>
+                                dispatch(
+                                  decreaseQuantity({
+                                    productId: product.productId,
+                                    variantId: product.variantId,
+                                  })
+                                )
+                              }
+                              className="h-full w-10 flex justify-center items-center cursor-pointer">
                               <HiMinus />
                             </button>
                             <input
                               type="text"
-                              value={qty}
+                              value={product.qty}
                               className="md:w-14 w-8 text-center border-none outline-offset-0"
                               readOnly
                             />
                             <button
                               type="button"
-                              onClick={() => handleQty("inc")}
-                              className="h-full w-10 flex justify-center items-center cursor-pointer"
-                            >
+                              onClick={() =>
+                                dispatch(
+                                  increaseQuantity({
+                                    productId: product.productId,
+                                    variantId: product.variantId,
+                                  })
+                                )
+                              }
+                              className="h-full w-10 flex justify-center items-center cursor-pointer">
                               <HiPlus />
                             </button>
                           </div>
@@ -142,9 +169,8 @@ export default function CartPage() {
                             })
                           )
                         }
-                        className="text-red-500"
-                      >
-                        <IoCloseCircleOutline />
+                        className="text-red-500 cursor-pointer">
+                        <IoCloseCircleOutline size={25} />
                       </button>
                     </td>
                   </tr>
@@ -152,7 +178,59 @@ export default function CartPage() {
               </tbody>
             </table>
           </div>
-          <div className="lg:w-[30%] w-full"></div>
+          <div className="lg:w-[30%] w-full">
+            <div className="rounded bg-gray-50 p-5 sticky top-5">
+              <h4 className="text-lg font-semibold mb-5">Order Summary</h4>
+              <div>
+                <table className="w-full">
+                  <tbody>
+                    <tr>
+                      <td className="font-medium">Subtotal</td>
+                      <td className="text-end py-2">
+                        {" "}
+                        {subTotal.toLocaleString("en-IN", {
+                          style: "currency",
+                          currency: "INR",
+                        })}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="font-medium">Discount</td>
+                      <td className="text-end py-2">
+                        {" "}
+                        {discount.toLocaleString("en-IN", {
+                          style: "currency",
+                          currency: "INR",
+                        })}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="font-medium">Total</td>
+                      <td className="text-end py-2">
+                        {" "}
+                        {subTotal.toLocaleString("en-IN", {
+                          style: "currency",
+                          currency: "INR",
+                        })}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+                <Button
+                  type="button"
+                  asChild
+                  className={"w-full bg-black rounded-full mt-5 mb-3"}>
+                  <Link href={WEBSITE_CHECKOUT}>Proceed to Checkout</Link>
+                </Button>
+
+                <p className="text-center">
+                  <Link href={WEBSITE_SHOP} className="hover:underline">
+                    Continue Shopping
+                  </Link>
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>
