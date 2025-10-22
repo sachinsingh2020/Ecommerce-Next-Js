@@ -14,12 +14,18 @@ import { Textarea } from "@/components/ui/textarea";
 import useFetch from "@/hooks/useFetch";
 import { showToast } from "@/lib/showToast";
 import { zSchema } from "@/lib/zodSchema";
-import { WEBSITE_SHOP, WEBSTIE_PRODUCT_DETAILS } from "@/routes/WebsiteRoute";
+import {
+  WEBSITE_ORDER_DETAILS,
+  WEBSITE_SHOP,
+  WEBSTIE_PRODUCT_DETAILS,
+} from "@/routes/WebsiteRoute";
 import { addIntoCart, clearCart } from "@/store/reducer/cartReducer";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import Script from "next/script";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaShippingFast } from "react-icons/fa";
@@ -32,6 +38,7 @@ const breadCrumb = {
   links: [{ label: "Checkout" }],
 };
 export default function CheckoutPage() {
+  const router = useRouter();
   const dispatch = useDispatch();
   const cart = useSelector((store) => store.cartStore);
   const auth = useSelector((store) => store.authStore);
@@ -45,6 +52,7 @@ export default function CheckoutPage() {
   const [couponLoading, setCouponLoading] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const [placingOrder, setPlacingOrder] = useState(false);
+  const [orderConfirmation, setOrderConfirmation] = useState(false);
 
   const { data: getVerifiedCartData } = useFetch(
     "/api/cart-verification",
@@ -163,10 +171,94 @@ export default function CheckoutPage() {
     },
   });
 
+  // get order id
+  const getOrderId = async (amount) => {
+    try {
+      const { data: orderIdData } = await axios.post(
+        "/api/payment/get-order-id",
+        { amount }
+      );
+
+      if (!orderIdData.success) {
+        throw new Error(orderIdData.message);
+      }
+
+      return { success: true, order_id: orderIdData.data };
+    } catch (error) {
+      return { success: false, message: error.message };
+    }
+  };
+
   const placeOrder = async (formData) => {
-    console.log(formData);
     setPlacingOrder(true);
     try {
+      const generatedOrderId = await getOrderId(totalAmount);
+      if (!generatedOrderId.success) {
+        throw new Error(generatedOrderId.message);
+      }
+
+      const order_id = generatedOrderId.order_id;
+      const razOption = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: totalAmount * 100,
+        currency: "INR",
+        name: "E-store",
+        description: "Payment for Order",
+        image:
+          "https://res.cloudinary.com/dls2tnwrx/image/upload/v1756799215/sacwac-preset/logo-black_idfpcs.webp",
+        order_id: order_id,
+        handler: async function (response) {
+          setOrderConfirmation(true);
+          const products = verifiedCartData.map((cartItem) => ({
+            productId: cartItem.productId,
+            variantId: cartItem.variantId,
+            name: cartItem.name,
+            qty: cartItem.qty,
+            mrp: cartItem.mrp,
+            sellingPrice: cartItem.sellingPrice,
+          }));
+
+          const { data: paymentResponseData } = await axios.post(
+            "/api/payment/save-order",
+            {
+              ...formData,
+              ...response,
+              products: products,
+              subTotal: subTotal,
+              discount: discount,
+              couponDiscountAmount: couponDiscountAmount,
+              totalAmount: totalAmount,
+            }
+          );
+
+          if (paymentResponseData.success) {
+            showToast("success", paymentResponseData.message);
+            dispatch(clearCart());
+            orderForm.reset();
+            router.push(WEBSITE_ORDER_DETAILS(response.razorpay_order_id));
+            setOrderConfirmation(false);
+          } else {
+            showToast("error", paymentResponseData.message);
+            setOrderConfirmation(false);
+          }
+        },
+        prefill: {
+          name: formData.name,
+          email: formData.email,
+          contact: formData.phone,
+        },
+
+        theme: {
+          color: "#7c3aed",
+        },
+      };
+
+      const rzp = new Razorpay(razOption);
+      rzp.on("payment.failed", function (response) {
+        showToast("error", response.error.description);
+      });
+
+      rzp.open();
     } catch (error) {
       showToast("error", error.message);
     } finally {
@@ -312,7 +404,10 @@ export default function CheckoutPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormControl>
-                            <Textarea placeholder="Enter order note" />
+                            <Textarea
+                              placeholder="Enter order note"
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -469,6 +564,8 @@ export default function CheckoutPage() {
           </div>
         </div>
       )}
+
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" />
     </div>
   );
 }

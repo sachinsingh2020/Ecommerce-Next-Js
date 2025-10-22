@@ -14,3 +14,5 @@ export const WEBSTIE_PRODUCT_DETAILS = (slug) =>
 
 export const WEBSITE_CART = "/cart";
 export const WEBSITE_CHECKOUT = "/checkout";
+
+export const WEBSITE_ORDER_DETAILS = (order_id) => `/order-details/${order_id}`;
