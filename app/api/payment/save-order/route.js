@@ -3,6 +3,7 @@ import { connectDB } from "@/lib/databaseConnection";
 import { catchError, response } from "@/lib/helperFunction";
 import { sendMail } from "@/lib/sendMail";
 import { zSchema } from "@/lib/zodSchema";
+import OrderModel from "@/models/Order.model";
 import { validatePaymentVerification } from "razorpay/dist/utils/razorpay-utils";
 import z from "zod";
 
@@ -11,6 +12,7 @@ export async function POST(request) {
     await connectDB();
 
     const payload = await request.json();
+    console.log(payload.products);
 
     const productSchema = z.object({
       productId: z.string().length(24, "Invalid product id format"),
@@ -96,6 +98,8 @@ export async function POST(request) {
         orderDetailsUrl: `${process.env.NEXT_PUBLIC_BASE_URL}/order-details/${validatedData.razorpay_order_id}`,
       };
 
+      console.log("validatedData email: ", validatedData.email);
+
       await sendMail(
         "Order placed successfully",
         validatedData.email,
@@ -105,7 +109,9 @@ export async function POST(request) {
       console.log(error);
     }
 
-    return response(true, 200, "Order placed successfully.");
+    console.log({ newOrder });
+
+    return response(true, 200, "Order placed successfully.", newOrder);
   } catch (error) {
     return catchError(error);
   }

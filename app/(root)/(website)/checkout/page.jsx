@@ -32,6 +32,7 @@ import { FaShippingFast } from "react-icons/fa";
 import { IoCloseCircleSharp } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
 import z from "zod";
+import loading from "@/public/assets/images/loading.svg";
 
 const breadCrumb = {
   title: "Checkout",
@@ -52,7 +53,7 @@ export default function CheckoutPage() {
   const [couponLoading, setCouponLoading] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const [placingOrder, setPlacingOrder] = useState(false);
-  const [orderConfirmation, setOrderConfirmation] = useState(false);
+  const [savingOrder, setSavingOrder] = useState(false);
 
   const { data: getVerifiedCartData } = useFetch(
     "/api/cart-verification",
@@ -208,7 +209,7 @@ export default function CheckoutPage() {
           "https://res.cloudinary.com/dls2tnwrx/image/upload/v1756799215/sacwac-preset/logo-black_idfpcs.webp",
         order_id: order_id,
         handler: async function (response) {
-          setOrderConfirmation(true);
+          setSavingOrder(true);
           const products = verifiedCartData.map((cartItem) => ({
             productId: cartItem.productId,
             variantId: cartItem.variantId,
@@ -236,10 +237,10 @@ export default function CheckoutPage() {
             dispatch(clearCart());
             orderForm.reset();
             router.push(WEBSITE_ORDER_DETAILS(response.razorpay_order_id));
-            setOrderConfirmation(false);
+            setSavingOrder(false);
           } else {
             showToast("error", paymentResponseData.message);
-            setOrderConfirmation(false);
+            setSavingOrder(false);
           }
         },
         prefill: {
@@ -268,6 +269,14 @@ export default function CheckoutPage() {
 
   return (
     <div>
+      {savingOrder && (
+        <div className="h-screen w-screen fixed top-0 left-0 z-50 bg-black/20">
+          <div className="h-screen flex justify-center items-center">
+            <Image src={loading.src} height={80} width={80} alt="Loading" />
+            <h4 className="font-semibold">Order Confirming...</h4>
+          </div>
+        </div>
+      )}
       <WebsiteBreadcrumb props={breadCrumb} />
       {cart.count === 0 ? (
         <div className="w-screen h-[500px] flex  justify-center items-center py-32">

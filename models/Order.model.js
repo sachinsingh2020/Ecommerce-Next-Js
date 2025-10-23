@@ -5,7 +5,7 @@ const orderSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
-    required: true,
+    required: false,
   },
   name: {
     type: String,
@@ -52,7 +52,7 @@ const orderSchema = new mongoose.Schema({
       },
       variantId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Product",
+        ref: "ProductVariant",
         required: true,
       },
       name: { type: String, required: true },
