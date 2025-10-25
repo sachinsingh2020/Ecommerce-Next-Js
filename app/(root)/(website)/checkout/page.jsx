@@ -42,7 +42,7 @@ export default function CheckoutPage() {
   const router = useRouter();
   const dispatch = useDispatch();
   const cart = useSelector((store) => store.cartStore);
-  const auth = useSelector((store) => store.authStore);
+  const authStore = useSelector((store) => store.authStore);
 
   const [verifiedCartData, setVerifiedCartData] = useState([]);
   const [isCouponApplied, setIsCouponApplied] = useState(false);
@@ -168,9 +168,15 @@ export default function CheckoutPage() {
       pincode: "",
       landmark: "",
       ordernote: "",
-      userId: auth?._id,
+      userId: authStore?.auth?._id,
     },
   });
+
+  useEffect(() => {
+    if (authStore) {
+      orderForm.setValue("userId", authStore?.auth?._id);
+    }
+  }, [authStore]);
 
   // get order id
   const getOrderId = async (amount) => {

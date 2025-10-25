@@ -1,57 +1,30 @@
 "use client";
+import Loading from "@/components/Application/Loading";
 import UserPanelLayout from "@/components/Application/Website/UserPanelLayout";
 import WebsiteBreadcrumb from "@/components/Application/Website/WebsiteBreadcrumb";
 import useFetch from "@/hooks/useFetch";
 import { WEBSITE_ORDER_DETAILS } from "@/routes/WebsiteRoute";
 import Link from "next/link";
-import { HiOutlineShoppingBag } from "react-icons/hi2";
-import { IoCartOutline } from "react-icons/io5";
-import { useSelector } from "react-redux";
 
 const breadCrumbData = {
-  title: "Dashboard",
-  links: [{ label: "Dashboard" }],
+  title: "Orders",
+  links: [{ label: "Orders" }],
 };
 
-export default function MyAccountPage() {
-  const { data: dashboardData } = useFetch("/api/dashboard/user");
-  const cartStore = useSelector((store) => store.cartStore);
-  console.log(cartStore);
-  console.log(dashboardData);
+export default function OrdersPage() {
+  const { data: orderData, loading } = useFetch("/api/user-order");
+  console.log(orderData);
   return (
     <div>
       <WebsiteBreadcrumb props={breadCrumbData} />
       <UserPanelLayout>
         <div className="shadow rounded">
-          <div className="p-5 text-xl font-semibold border">Dashboard</div>
+          <div className="p-5 text-xl font-semibold border-b">Orders</div>
         </div>
         <div className="p-5">
-          <div className="grid lg:grid-cols-2 grid-cols-1 gap-10">
-            <div className="flex items-center justify-between gap-5 border roudned p-3">
-              <div>
-                <h4 className="font-semibold text-lg mb-1">Total Orders</h4>
-                <span className="font-semibold text-gray-500">
-                  {dashboardData?.data?.totalOrder || 0}
-                </span>
-              </div>
-              <div className="w-16 h-16 bg-primary rounded-full flex justify-center items-center">
-                <HiOutlineShoppingBag className="text-white" size={25} />
-              </div>
-            </div>
-            <div className="flex items-center justify-between gap-5 border roudned p-3">
-              <div>
-                <h4 className="font-semibold text-lg mb-1">Items In Cart</h4>
-                <span className="font-semibold text-gray-500">
-                  {cartStore?.count || 0}
-                </span>
-              </div>
-              <div className="w-16 h-16 bg-primary rounded-full flex justify-center items-center">
-                <IoCartOutline className="text-white" size={25} />
-              </div>
-            </div>
-          </div>
-          <div className="mt-5">
-            <h4 className="text-lg font-semibold mb-3">Recent Orders</h4>
+          {loading ? (
+            <div className="text-center py-5">Loading...</div>
+          ) : (
             <table className="w-full">
               <thead>
                 <tr>
@@ -70,8 +43,8 @@ export default function MyAccountPage() {
                 </tr>
               </thead>
               <tbody>
-                {dashboardData &&
-                  dashboardData?.data?.recentOrders?.map((order, i) => (
+                {orderData &&
+                  orderData?.data?.map((order, i) => (
                     <tr key={order._id}>
                       <td className="text-start text-sm text-gray-500 p-2 font-bold">
                         {i + 1}
@@ -96,7 +69,7 @@ export default function MyAccountPage() {
                   ))}
               </tbody>
             </table>
-          </div>
+          )}
         </div>
       </UserPanelLayout>
     </div>
