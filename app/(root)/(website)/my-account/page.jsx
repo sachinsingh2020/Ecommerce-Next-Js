@@ -52,50 +52,52 @@ export default function MyAccountPage() {
           </div>
           <div className="mt-5">
             <h4 className="text-lg font-semibold mb-3">Recent Orders</h4>
-            <table className="w-full">
-              <thead>
-                <tr>
-                  <th className="text-start p-2 text-sm border-b text-nowrap text-gray-500">
-                    Sr. No.
-                  </th>
-                  <th className="text-start p-2 text-sm border-b text-nowrap text-gray-500">
-                    Order id
-                  </th>
-                  <th className="text-start p-2 text-sm border-b text-nowrap text-gray-500">
-                    Total Item
-                  </th>
-                  <th className="text-start p-2 text-sm border-b text-nowrap text-gray-500">
-                    Amount
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {dashboardData &&
-                  dashboardData?.data?.recentOrders?.map((order, i) => (
-                    <tr key={order._id}>
-                      <td className="text-start text-sm text-gray-500 p-2 font-bold">
-                        {i + 1}
-                      </td>
-                      <td className="text-start text-sm text-gray-500 p-2 ">
-                        <Link
-                          className="underline hover:text-blue-500 underline-offset-2"
-                          href={WEBSITE_ORDER_DETAILS(order.order_id)}>
-                          {order.order_id}
-                        </Link>
-                      </td>
-                      <td className="text-start text-sm text-gray-500 p-2 ">
-                        {order.products.length}
-                      </td>
-                      <td className="text-start text-sm text-gray-500 p-2 ">
-                        {order.totalAmount.toLocaleString("en-IN", {
-                          style: "currency",
-                          currency: "INR",
-                        })}
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+            <div className="overflow-auto">
+              <table className="w-full">
+                <thead>
+                  <tr>
+                    <th className="text-start p-2 text-sm border-b text-nowrap text-gray-500">
+                      Sr. No.
+                    </th>
+                    <th className="text-start p-2 text-sm border-b text-nowrap text-gray-500">
+                      Order id
+                    </th>
+                    <th className="text-start p-2 text-sm border-b text-nowrap text-gray-500">
+                      Total Item
+                    </th>
+                    <th className="text-start p-2 text-sm border-b text-nowrap text-gray-500">
+                      Amount
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {dashboardData &&
+                    dashboardData?.data?.recentOrders?.map((order, i) => (
+                      <tr key={order._id}>
+                        <td className="text-start text-sm text-gray-500 p-2 font-bold">
+                          {i + 1}
+                        </td>
+                        <td className="text-start text-sm text-gray-500 p-2 ">
+                          <Link
+                            className="underline hover:text-blue-500 underline-offset-2"
+                            href={WEBSITE_ORDER_DETAILS(order.order_id)}>
+                            {order.order_id}
+                          </Link>
+                        </td>
+                        <td className="text-start text-sm text-gray-500 p-2 ">
+                          {order.products.length}
+                        </td>
+                        <td className="text-start text-sm text-gray-500 p-2 ">
+                          {order.totalAmount.toLocaleString("en-IN", {
+                            style: "currency",
+                            currency: "INR",
+                          })}
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </UserPanelLayout>
