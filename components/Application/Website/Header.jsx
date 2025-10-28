@@ -41,8 +41,7 @@ const Header = () => {
           <nav
             className={`lg:relative lg:w-auto lg:h-auto lg:top-0 lg:left-0 lg:p-0 bg-white fixed z-50 top-0 w-full h-screen transition-all ${
               isMobileMenu ? "left-0" : "-left-full"
-            }`}
-          >
+            }`}>
             <div className="lg:hidden flex justify-between items-center bg-gray-50 py-3 border-b px-3">
               <Image
                 src={logo}
@@ -66,7 +65,7 @@ const Header = () => {
                 </Link>
               </li>
               <li className="text-gray-600 hover:text-primary hover:font-semibold">
-                <Link href={""} className="block py-2">
+                <Link href={"/about-us"} className="block py-2">
                   About
                 </Link>
               </li>
@@ -76,17 +75,23 @@ const Header = () => {
                 </Link>
               </li>
               <li className="text-gray-600 hover:text-primary hover:font-semibold">
-                <Link href={""} className="block py-2">
+                <Link
+                  href={`${WEBSITE_SHOP}?category=t-shirts`}
+                  className="block py-2">
                   T-shirt
                 </Link>
               </li>
               <li className="text-gray-600 hover:text-primary hover:font-semibold">
-                <Link href={""} className="block py-2">
+                <Link
+                  href={`${WEBSITE_SHOP}?category=hoodies`}
+                  className="block py-2">
                   Hoodies
                 </Link>
               </li>
               <li className="text-gray-600 hover:text-primary hover:font-semibold">
-                <Link href={""} className="block py-2">
+                <Link
+                  href={`${WEBSITE_SHOP}?category=oversized`}
+                  className="block py-2">
                   Oversized
                 </Link>
               </li>
@@ -118,8 +123,7 @@ const Header = () => {
             <button
               type="button"
               className="lg:hidden block"
-              onClick={() => setIsMobileMenu(true)}
-            >
+              onClick={() => setIsMobileMenu(true)}>
               <HiMiniBars3
                 size={25}
                 className="text-gray-500 hover:text-primary"
