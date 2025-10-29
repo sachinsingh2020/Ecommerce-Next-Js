@@ -17,7 +17,9 @@ const ArrowNext = (props) => {
     <button
       onClick={onClick}
       type="button"
-      className="w-14 h-14 flex justify-center items-center rounded-full absolute z-10 top-1/2 -translate-y-1/2 bg-white right-10">
+      className="w-14 h-14 flex justify-center items-center rounded-full absolute z-10 top-1/2 -translate-y-1/2 bg-white right-10
+      max-[530px]:hidden" // hide button on mobile
+    >
       <LuChevronRight size={25} className="text-gray-600" />
     </button>
   );
@@ -29,7 +31,9 @@ const ArrowPrev = (props) => {
     <button
       onClick={onClick}
       type="button"
-      className="w-14 h-14 flex justify-center items-center rounded-full absolute z-10 top-1/2 -translate-y-1/2 bg-white left-10">
+      className="w-14 h-14 flex justify-center items-center rounded-full absolute z-10 top-1/2 -translate-y-1/2 bg-white left-10
+      max-[530px]:hidden" // hide button on mobile
+    >
       <LuChevronLeft size={25} className="text-gray-600" />
     </button>
   );
@@ -45,51 +49,29 @@ const MainSlider = () => {
     prevArrow: <ArrowPrev />,
     responsive: [
       {
-        breakpoint: 600,
+        breakpoint: 530,
         settings: {
           dots: false,
-          arrow: false,
-          nextArrow: "",
-          prevArrow: "",
+          arrows: false, // correct property name
         },
       },
     ],
   };
+
   return (
     <div>
       <Slider {...settings}>
-        <div>
-          <Image
-            src={slider1.src}
-            width={slider1.width}
-            height={slider1.height}
-            alt="slider 1"
-          />
-        </div>
-        <div>
-          <Image
-            src={slider2.src}
-            width={slider2.width}
-            height={slider2.height}
-            alt="slider 2"
-          />
-        </div>
-        <div>
-          <Image
-            src={slider3.src}
-            width={slider3.width}
-            height={slider3.height}
-            alt="slider 3"
-          />
-        </div>
-        <div>
-          <Image
-            src={slider4.src}
-            width={slider4.width}
-            height={slider4.height}
-            alt="slider 4"
-          />
-        </div>
+        {[slider1, slider2, slider3, slider4].map((img, i) => (
+          <div key={i}>
+            <Image
+              src={img.src}
+              width={img.width}
+              height={img.height}
+              alt={`slider ${i + 1}`}
+              className="w-full h-auto object-cover"
+            />
+          </div>
+        ))}
       </Slider>
     </div>
   );
