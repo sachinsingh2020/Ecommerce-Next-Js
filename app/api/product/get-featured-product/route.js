@@ -7,7 +7,7 @@ export async function GET() {
   try {
     await connectDB();
 
-    const getProduct = await ProductModel.find({ deleteType: null })
+    const getProduct = await ProductModel.find({ deletedAt: null })
       .populate("media")
       .limit(8)
       .lean();
