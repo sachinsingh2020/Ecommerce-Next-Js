@@ -45,7 +45,7 @@ const MainSlider = () => {
     prevArrow: <ArrowPrev />,
     responsive: [
       {
-        breakpoint: 500,
+        breakpoint: 530,
         settings: {
           dots: false,
           arrow: false,
