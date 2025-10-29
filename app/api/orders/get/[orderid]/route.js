@@ -7,7 +7,6 @@ import ProductVariantModel from "@/models/ProductVariant.model";
 
 export async function GET(request, { params }) {
   try {
-    console.log("in the backend");
     await connectDB();
 
     const getParams = await params;
@@ -24,8 +23,6 @@ export async function GET(request, { params }) {
         populate: { path: "media" },
       })
       .lean();
-
-    console.log(orderData.products);
 
     if (!orderData) {
       return response(false, 404, "Order not found");
