@@ -25,6 +25,9 @@ const Header = () => {
   const [isMobileMenu, setIsMobileMenu] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
 
+  // helper function to close sidebar when a link is clicked
+  const handleLinkClick = () => setIsMobileMenu(false);
+
   return (
     <div className="bg-white border-b lg:px-32 px-4">
       <div className="flex justify-between items-center lg:py-5 py-3">
@@ -33,13 +36,15 @@ const Header = () => {
             src={logo}
             width={382}
             height={146}
-            alt="loho"
-            className="lg:w-32 w-24 "
+            alt="logo"
+            className="lg:w-32 w-24"
           />
         </Link>
+
         <div className="flex justify-between gap-20">
+          {/* NAV MENU */}
           <nav
-            className={`lg:relative lg:w-auto lg:h-auto lg:top-0 lg:left-0 lg:p-0 bg-white fixed z-50 top-0 w-full h-screen transition-all ${
+            className={`lg:relative lg:w-auto lg:h-auto lg:top-0 lg:left-0 lg:p-0 bg-white fixed z-50 top-0 w-full h-screen transition-all duration-300 ${
               isMobileMenu ? "left-0" : "-left-full"
             }`}>
             <div className="lg:hidden flex justify-between items-center bg-gray-50 py-3 border-b px-3">
@@ -58,45 +63,60 @@ const Header = () => {
                 />
               </button>
             </div>
+
             <ul className="lg:flex justify-between items-center gap-10 px-3">
               <li className="text-gray-600 hover:text-primary hover:font-semibold">
-                <Link href={WEBSITE_HOME} className="block py-2">
+                <Link
+                  href={WEBSITE_HOME}
+                  className="block py-2"
+                  onClick={handleLinkClick}>
                   Home
                 </Link>
               </li>
               <li className="text-gray-600 hover:text-primary hover:font-semibold">
-                <Link href={"/about-us"} className="block py-2">
+                <Link
+                  href="/about-us"
+                  className="block py-2"
+                  onClick={handleLinkClick}>
                   About
                 </Link>
               </li>
               <li className="text-gray-600 hover:text-primary hover:font-semibold">
-                <Link href={WEBSITE_SHOP} className="block py-2">
+                <Link
+                  href={WEBSITE_SHOP}
+                  className="block py-2"
+                  onClick={handleLinkClick}>
                   Shop
                 </Link>
               </li>
               <li className="text-gray-600 hover:text-primary hover:font-semibold">
                 <Link
                   href={`${WEBSITE_SHOP}?category=t-shirts`}
-                  className="block py-2">
+                  className="block py-2"
+                  onClick={handleLinkClick}>
                   T-shirt
                 </Link>
               </li>
               <li className="text-gray-600 hover:text-primary hover:font-semibold">
                 <Link
                   href={`${WEBSITE_SHOP}?category=hoodies`}
-                  className="block py-2">
+                  className="block py-2"
+                  onClick={handleLinkClick}>
                   Hoodies
                 </Link>
               </li>
               <li className="text-gray-600 hover:text-primary hover:font-semibold">
                 <Link
                   href={`${WEBSITE_SHOP}?category=oversized`}
-                  className="block py-2">
+                  className="block py-2"
+                  onClick={handleLinkClick}>
                   Oversized
                 </Link>
               </li>
             </ul>
           </nav>
+
+          {/* RIGHT ICONS */}
           <div className="flex justify-between items-center gap-8">
             <button type="button" onClick={() => setShowSearch(!showSearch)}>
               <IoIosSearch
@@ -104,16 +124,18 @@ const Header = () => {
                 size={25}
               />
             </button>
+
             <Cart />
+
             {!auth ? (
-              <Link href={WEBSITE_LOGIN}>
+              <Link href={WEBSITE_LOGIN} onClick={handleLinkClick}>
                 <VscAccount
                   className="text-gray-500 hover:text-primary cursor-pointer"
                   size={25}
                 />
               </Link>
             ) : (
-              <Link href={USER_DASHBOARD}>
+              <Link href={USER_DASHBOARD} onClick={handleLinkClick}>
                 <Avatar>
                   <AvatarImage src={auth?.avatar?.url || userIcon.src} />
                 </Avatar>
@@ -132,6 +154,7 @@ const Header = () => {
           </div>
         </div>
       </div>
+
       <Search isShow={showSearch} />
     </div>
   );
