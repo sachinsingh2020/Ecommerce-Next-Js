@@ -241,7 +241,7 @@ const ProductReview = ({ productId }) => {
                     <div className="mb-3">
                       <ButtonLoading
                         type="submit"
-                        text="Add Category"
+                        text="Add Review"
                         className={"cursor-pointer"}
                         loading={loading}
                       />
