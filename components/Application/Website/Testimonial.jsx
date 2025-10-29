@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
@@ -70,60 +70,73 @@ const testimonials = [
 ];
 
 const Testimonial = () => {
+  const [slidesToShow, setSlidesToShow] = useState(3);
+
+  // ✅ Detect screen width dynamically
+  useEffect(() => {
+    const updateSlides = () => {
+      const width = window.innerWidth;
+      if (width < 768) setSlidesToShow(1);
+      else if (width < 1024) setSlidesToShow(2);
+      else setSlidesToShow(3);
+    };
+
+    updateSlides();
+    window.addEventListener("resize", updateSlides);
+    return () => window.removeEventListener("resize", updateSlides);
+  }, []);
+
   const settings = {
     dots: true,
     infinite: true,
-    speed: 500,
+    speed: 600,
     autoplay: true,
-    slidesToShow: 3,
+    autoplaySpeed: 2500,
+    slidesToShow,
     slidesToScroll: 1,
-
-    responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-          dots: true,
-          infinite: true,
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          dots: false,
-          infinite: true,
-        },
-      },
-    ],
   };
+
   return (
     <div className="lg:px-32 px-4 sm:pt-20 pt-5 pb-10">
-      <h2 className="text-center sm:text-4xl text-2xl mb-5 font-semibold">
+      <h2 className="text-center sm:text-4xl text-2xl mb-8 font-semibold">
         Customer Review
       </h2>
+
       <Slider {...settings}>
         {testimonials.map((item, index) => (
-          <div key={index} className="p-5">
-            <div className="border rounded-lg p-5">
-              <BsChatQuote size={30} className="mb-3" />
-              <p className="mb-5">{item.review}</p>
-              <h4 className="font-semibold">{item.name}</h4>
-              <div className="flex mt-1">
-                {Array.from({ length: item.rating }).map((_, i) => (
-                  <IoStar
-                    key={`star${i}`}
-                    className="text-yellow-400"
-                    size={20}
-                  />
-                ))}
+          <div key={index} className="p-4">
+            <div className="border rounded-2xl p-6 shadow-md bg-white h-full flex flex-col justify-between">
+              <BsChatQuote size={30} className="mb-4 text-gray-500" />
+              <p className="text-gray-700 mb-5 leading-relaxed text-justify">
+                {item.review}
+              </p>
+              <div>
+                <h4 className="font-semibold text-lg text-gray-900">
+                  {item.name}
+                </h4>
+                <div className="flex mt-2">
+                  {Array.from({ length: Math.round(item.rating) }).map(
+                    (_, i) => (
+                      <IoStar key={i} className="text-yellow-400" size={20} />
+                    )
+                  )}
+                </div>
               </div>
             </div>
           </div>
         ))}
       </Slider>
+
+      {/* Optional CSS tidy-up */}
+      <style jsx global>{`
+        .slick-slide > div {
+          display: flex;
+          justify-content: center;
+        }
+        .slick-dots li button:before {
+          color: #000 !important;
+        }
+      `}</style>
     </div>
   );
 };
