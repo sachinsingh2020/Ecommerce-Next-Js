@@ -1,51 +1,72 @@
 import { NextResponse } from "next/server";
-import { USER_DASHBOARD, WEBSITE_LOGIN } from "./routes/WebsiteRoute";
 import { jwtVerify } from "jose";
+import { USER_DASHBOARD, WEBSITE_LOGIN } from "./routes/WebsiteRoute";
 import { ADMIN_DASHBOARD } from "./routes/AdminPanelRoute";
 
 export async function middleware(request) {
-  try {
-    const pathname = request.nextUrl.pathname;
-    const hasToken = request.cookies.has("access_token");
+  const { pathname, origin } = request.nextUrl;
 
-    if (!hasToken) {
-      // if the user is not logged in  and trying to access a protected route, redirect to login page
-      if (!pathname.startsWith("/auth")) {
-        return NextResponse.redirect(new URL(WEBSITE_LOGIN, request.nextUrl));
+  try {
+    const accessToken = request.cookies.get("access_token")?.value;
+
+    // -------------------------------
+    // 1️⃣ NO TOKEN → only /auth allowed
+    // -------------------------------
+    if (!accessToken) {
+      // Allow only login/register routes if not logged in
+      if (pathname.startsWith("/auth")) {
+        return NextResponse.next();
+      }
+
+      // Redirect all protected routes to login
+      if (pathname.startsWith("/admin") || pathname.startsWith("/my-account")) {
+        return NextResponse.redirect(new URL(WEBSITE_LOGIN, origin));
       }
 
       return NextResponse.next();
     }
 
-    // verify token
-    const access_token = request.cookies.get("access_token").value;
+    // -------------------------------
+    // 2️⃣ VERIFY TOKEN
+    // -------------------------------
     const { payload } = await jwtVerify(
-      access_token,
+      accessToken,
       new TextEncoder().encode(process.env.SECRET_KEY)
     );
-
     const role = payload.role;
 
+    // -------------------------------
+    // 3️⃣ Already logged in → block /auth
+    // -------------------------------
     if (pathname.startsWith("/auth")) {
-      return NextResponse.redirect(
-        new URL(
-          role === "admin" ? ADMIN_DASHBOARD : USER_DASHBOARD,
-          request.nextUrl
-        )
-      );
+      const redirectTo =
+        role === "admin"
+          ? new URL(ADMIN_DASHBOARD, origin)
+          : new URL(USER_DASHBOARD, origin);
+      return NextResponse.redirect(redirectTo);
     }
 
-    if (pathname.startsWith("admin") && role !== "admin") {
-      return NextResponse.redirect(new URL(WEBSITE_LOGIN, request.nextUrl));
+    // -------------------------------
+    // 4️⃣ Role-based access control
+    // -------------------------------
+    if (pathname.startsWith("/admin") && role !== "admin") {
+      return NextResponse.redirect(new URL(WEBSITE_LOGIN, origin));
     }
 
-    if (pathname.startsWith("/my-account") && role != "user") {
-      return NextResponse.redirect(new URL(WEBSITE_LOGIN, request.nextUrl));
+    if (pathname.startsWith("/my-account") && role !== "user") {
+      return NextResponse.redirect(new URL(WEBSITE_LOGIN, origin));
     }
 
+    // -------------------------------
+    // ✅ Default: allow request
+    // -------------------------------
     return NextResponse.next();
   } catch (error) {
-    return NextResponse.redirect(new URL(WEBSITE_LOGIN, request.nextUrl));
+    console.error("Middleware error:", error.message);
+    // On invalid/expired token, force logout
+    const response = NextResponse.redirect(new URL(WEBSITE_LOGIN, request.url));
+    response.cookies.delete("access_token");
+    return response;
   }
 }
 
