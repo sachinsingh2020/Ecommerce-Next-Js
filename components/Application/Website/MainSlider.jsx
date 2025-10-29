@@ -17,8 +17,7 @@ const ArrowNext = (props) => {
     <button
       onClick={onClick}
       type="button"
-      className="w-14 h-14 flex justify-center items-center rounded-full absolute z-10 top-1/2 -translate-y-1/2 bg-white right-10"
-    >
+      className="w-14 h-14 flex justify-center items-center rounded-full absolute z-10 top-1/2 -translate-y-1/2 bg-white right-10">
       <LuChevronRight size={25} className="text-gray-600" />
     </button>
   );
@@ -30,8 +29,7 @@ const ArrowPrev = (props) => {
     <button
       onClick={onClick}
       type="button"
-      className="w-14 h-14 flex justify-center items-center rounded-full absolute z-10 top-1/2 -translate-y-1/2 bg-white left-10"
-    >
+      className="w-14 h-14 flex justify-center items-center rounded-full absolute z-10 top-1/2 -translate-y-1/2 bg-white left-10">
       <LuChevronLeft size={25} className="text-gray-600" />
     </button>
   );
@@ -47,7 +45,7 @@ const MainSlider = () => {
     prevArrow: <ArrowPrev />,
     responsive: [
       {
-        breakpoint: 480,
+        breakpoint: 500,
         settings: {
           dots: false,
           arrow: false,
